@@ -6,7 +6,7 @@ const Layout = () => {
   return (
     <>
       <NavBar />
-      <main className="w-full bg-colorPrimary h-screen py-16 px-24">
+      <main className="w-full bg-colorPrimary h-screen py-16 px-24 overflow-auto">
         <Outlet />
       </main>
       <Footer />
