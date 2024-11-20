@@ -41,7 +41,7 @@ function Home() {
   };
 
   return (
-    <section className="flex-col space-y-[72px] mt-12">
+    <section className="flex-col space-y-[72px] mt-1">
       <section className="flex-col space-y-7 w-full">
         <header className="flex gap-3 text-textPrimary">
           <img src="./images/search.svg" alt="Search Icon" className="size-9" />

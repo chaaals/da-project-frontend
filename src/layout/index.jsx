@@ -4,11 +4,13 @@ import Footer from "../components/Footer";
 
 const Layout = () => {
   return (
-    <main className="w-full bg-colorPrimary h-screen py-16 px-24">
+    <>
       <NavBar />
-      <Outlet />
+      <main className="w-full bg-colorPrimary h-screen py-16 px-24">
+        <Outlet />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 };
 

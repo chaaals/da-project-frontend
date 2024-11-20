@@ -3,9 +3,9 @@ import Layout from "./layout";
 
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
+import ReportPage from "./pages/ReportPage";
 
 import "./App.css";
-import ReportPage from "./pages/ReportPage";
 
 function App() {
   return (

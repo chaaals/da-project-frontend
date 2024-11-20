@@ -3,13 +3,13 @@ import React, { useState } from "react";
 // Header Component
 const Header = () => {
   return (
-    <header className="flex justify-between items-center p-2 bg-transparent mt-12">
+    <section className="flex justify-between items-center p-2 bg-transparent">
       <div className="text-white text-4xl font-semibold">Reports Page</div>
       {/* Made text bigger */}
       <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
         Download Reports
       </button>
-    </header>
+    </section>
   );
 };
 
@@ -32,7 +32,7 @@ const Tabs = () => {
   };
 
   return (
-    <div className="text-sm font-medium text-center text-gray-500 dark:text-gray-400 dark:border-gray-700 mt-4">
+    <div className="text-sm font-medium text-center text-gray-500 dark:text-gray-400 dark:border-gray-700">
       <ul className="flex flex-wrap -mb-px">
         {tabs.map((tab) => (
           <li key={tab.id} className="me-2">
@@ -92,10 +92,10 @@ const Tabs = () => {
 // ReportPage Component (Combining Everything)
 const ReportPage = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-transparent">
+    <section className="flex flex-col min-h-screen bg-transparent">
       <Header />
       <Tabs />
-    </div>
+    </section>
   );
 };
 

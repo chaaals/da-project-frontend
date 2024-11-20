@@ -9,7 +9,7 @@ const NavBar = () => {
 
   return (
     <nav className="bg-[#1F2A37] border-gray-200">
-      <div className="flex flex-wrap items-center justify-between mx-0 p-4">
+      <div className="flex flex-wrap items-center justify-between mx-3 p-6">
         <a href="/" className="flex items-center space-x-2 rtl:space-x-reverse">
           <img
             src="/images/logo.svg" // Update with the correct logo path
