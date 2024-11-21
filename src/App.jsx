@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound";
 import ReportPage from "./pages/ReportPage";
 
 import "./App.css";
+import AddReportPage from "./pages/AddReportPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="report" element={<ReportPage />} />
+        <Route path="addreport" element={<AddReportPage />} />
         {/* Add Other Routes */}
         <Route path="*" element={<NotFound />} />
       </Route>
