@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import Modal from "../components/addReportComponents/Modal";
 
 // Header Component
 const Header = () => {
   return (
     <section className="flex justify-between items-center p-2 bg-transparent">
       <div className="text-white text-4xl font-semibold">Reports Page</div>
-      {/* Made text bigger */}
       <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
         Download Reports
       </button>
@@ -13,22 +13,10 @@ const Header = () => {
   );
 };
 
-// Tab Component with Plus Sign and Dynamic Tab Functionality
-const Tabs = () => {
-  const [activeTab, setActiveTab] = useState("Overview");
-  const [tabs, setTabs] = useState([
-    { id: "Overview", content: "Add a report to see summary of report here" },
-  ]);
-
+// Tabs Component
+const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-  };
-
-  const handleAddTab = () => {
-    const newTabId = `Report ${tabs.length}`; // Unique ID for new tab
-    const newTab = { id: newTabId, content: `${newTabId} Content` };
-    setTabs([...tabs, newTab]);
-    setActiveTab(newTabId); // Set the newly added tab as the active tab
   };
 
   return (
@@ -51,7 +39,7 @@ const Tabs = () => {
         ))}
         <li className="me-2">
           <button
-            onClick={handleAddTab}
+            onClick={onAddTab} // Open modal
             className="inline-block p-5 border-transparent"
           >
             <img
@@ -71,12 +59,6 @@ const Tabs = () => {
                 {tab.id === "Overview" ? (
                   <div className="flex flex-col items-center bg-[#1F2A37] rounded-lg shadow-md p-8">
                     <p>{tab.content}</p>
-                    <button
-                      onClick={handleAddTab}
-                      className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                    >
-                      Add a Report
-                    </button>
                   </div>
                 ) : (
                   tab.content
@@ -89,12 +71,45 @@ const Tabs = () => {
   );
 };
 
-// ReportPage Component (Combining Everything)
+// ReportPage Component
 const ReportPage = () => {
+  const [showModal, setShowModal] = useState(false); // Control modal visibility
+  const [tabs, setTabs] = useState([
+    { id: "Overview", content: "Add a report to see summary of report here" },
+  ]);
+  const [activeTab, setActiveTab] = useState("Overview");
+
+  const handleAddTab = () => {
+    setShowModal(true); // Open modal
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false); // Close modal
+  };
+
+  const handleAddReport = () => {
+    const newTabId = `Report ${tabs.length + 1}`; // Generate unique ID
+    const newTab = { id: newTabId, content: `${newTabId} Content` };
+    setTabs((prevTabs) => [...prevTabs, newTab]); // Add new tab
+    setActiveTab(newTabId); // Set the new tab as active
+    setShowModal(false); // Close modal
+  };
+
   return (
     <section className="flex flex-col min-h-screen bg-transparent">
       <Header />
-      <Tabs />
+      <Tabs
+        tabs={tabs}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onAddTab={handleAddTab}
+      />
+      {showModal && (
+        <Modal
+          toggleModal={handleModalClose} // Close modal handler
+          onAddReport={handleAddReport} // Add report handler
+        />
+      )}
     </section>
   );
 };

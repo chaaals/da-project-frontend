@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound";
 import ReportPage from "./pages/ReportPage";
 
 import "./App.css";
+import AddReportPage from "./pages/AddReportPage";
 
 function App() {
   return (
