@@ -1,11 +1,40 @@
-import { createContext, useState } from "react";
+import { createContext, useRef, useState } from "react";
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [greet, setGreet] = useState("Hello world");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const removeFile = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+    }
+  };
+
   return (
-    <AppContext.Provider value={{ greet, setGreet }}>
+    <AppContext.Provider
+      value={{
+        selectedFile,
+        setSelectedFile,
+        fileInputRef,
+        handleFileChange,
+        handleButtonClick,
+        removeFile,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
