@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import AppContext from "../context/app";
 import Button from "../components/Button";
 import Table from "../components/table";
-import { useCustomNavigate } from "../util/navigatePage";
+import { useCustomNavigate } from "../hooks/useCustomNavigate";
 
 function Home() {
   const report_data = [
@@ -26,7 +26,7 @@ function Home() {
     removeFile,
   } = useContext(AppContext);
   
-  const customNavigate = useCustomNavigate();
+  const { goto } = useCustomNavigate()
 
   return (
     <section className="flex-col space-y-[72px] mt-1">
@@ -95,7 +95,7 @@ function Home() {
               <Button onClick={removeFile} style="bg-[#C81E1E] h-12 rounded-lg px-4 ">
                 <span className="font-inter text-white">Clear</span>
               </Button>
-              <Button onClick={() => customNavigate("/report")} style="bg-colorButton h-12 rounded-lg px-4">
+              <Button onClick={() => goto("/report")} style="bg-colorButton h-12 rounded-lg px-4">
                 <span className="font-inter text-white">Create Report</span>
               </Button>
             </aside>

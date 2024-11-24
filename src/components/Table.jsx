@@ -7,10 +7,10 @@ const Table = ({data}) => {
         <table className="table-fixed min-w-[700px] w-full text-center text-textPrimary">
             <thead>
             <tr className="font-inter">
-                <th>ID</th>
-                <th>Report Name</th>
-                <th>Date Created</th>
-                <th>Actions</th>
+                <th><strong>ID</strong></th>
+                <th><strong>Report Name</strong></th>
+                <th><strong>Date Created</strong></th>
+                <th><strong>Actions</strong></th>
             </tr>
             </thead>
             <tbody className='font-inter text-center'>
