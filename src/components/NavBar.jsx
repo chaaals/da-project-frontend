@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import AppContext from "../context/app";
+import Button from "./Button";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -7,52 +9,57 @@ const NavBar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const {
+    selectedFile,
+    fileInputRef,
+    handleButtonClick,
+    handleFileChange,
+    removeFile,
+  } = useContext(AppContext);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 770) { // Assuming 1024px as the breakpoint for desktop
+        setIsMenuOpen(false); // Close menu on desktop
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    // Event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <nav className="bg-[#1F2A37] border-gray-200">
-      <div className="flex flex-wrap items-center justify-between mx-3 p-6">
-        <a href="/" className="flex items-center space-x-2 rtl:space-x-reverse">
-          <img
-            src="/images/logo.svg" // Update with the correct logo path
-            className="h-10 w-10" // Adjust height and width for better scaling
-            alt="PowerBytes Logo"
-          />
-          <span className="self-center text-xl font-semibold whitespace-nowrap text-white">
-            PowerBytes
-          </span>
+    <nav className={`${isMenuOpen ? "pb-0" : "pb-6"} bg-[#1F2A37] p-6 flex-col w-full`}>
+      <section className="flex justify-between">
+        <a href="/" className="flex items-center space-x-2">
+          <img src="/images/logo.svg" alt="PowerBytes Logo" className="size-10"/>
+          <span className="self-center text-xl font-semibold whitespace-nowrap text-white">PowerBytes</span>
         </a>
-
-        <div className="flex items-center space-x-4 md:space-x-6">
-          {/* Home and History buttons */}
-          <a
-            href="#"
-            className="text-white hover:bg-[#1B1F25] rounded-md px-4 py-2"
-          >
-            Home
-          </a>
-          <a
-            href="#"
-            className="text-white hover:bg-[#1B1F25] rounded-md px-4 py-2"
-          >
-            History
-          </a>
-
-          {/* Upload CSV button */}
-          <button
-            type="button"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-          >
+        <section className="flex space-x-7">
+          <a href="/" className="text-white hover:bg-[#1B1F25] rounded-md px-4 py-2 hidden desktop:block"> Home </a>
+          <a href="/history" className="text-white hover:bg-[#1B1F25] rounded-md px-4 py-2 hidden desktop:block" > History </a>
+          <Button onClick={handleButtonClick} style="text-white bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-nowrap">
             Upload CSV
-          </button>
-
-          {/* Mobile menu button */}
-          <button
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-end text-sm text-gray-400 rounded-lg md:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
-            aria-controls="navbar-cta"
-            aria-expanded={isMenuOpen}
-            onClick={toggleMenu}
-          >
-            <span className="sr-only">Open main menu</span>
+          </Button>
+          <input
+            type="file"
+            accept=".csv"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <button type="button" onClick={toggleMenu}
+            className="items-center p-2 w-10 h-10 justify-end text-sm text-gray-400 rounded-lg block desktop:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"  
+            >
+          <span className="sr-only">Open main menu</span>   
             <svg
               className="w-5 h-5"
               aria-hidden="true"
@@ -69,33 +76,22 @@ const NavBar = () => {
               />
             </svg>
           </button>
-        </div>
-      </div>
-
-      {/* Mobile menu items */}
-      <div
-        className={`${isMenuOpen ? "block" : "hidden"} md:hidden w-full`}
-        id="navbar-cta"
-      >
-        <ul className="flex flex-col font-medium p-4 bg-[#1F2A37]">
+        </section>
+      </section>
+      <section className={`${isMenuOpen ? "block" : "hidden"} desktop:hidden block w-full`}>
+        <ul className="flex flex-col font-medium py-4 bg-[#1F2A37]">
           <li>
-            <a
-              href="#"
-              className="block py-2 px-4 rounded text-white bg-blue-700 hover:bg-blue-800"
-            >
+            <a href="/" className="block py-2 px-4 rounded text-white bg-blue-700 hover:bg-blue-800" >
               Home
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              className="block py-2 px-4 rounded text-gray-300 hover:bg-gray-700 hover:text-white"
-            >
+            <a href="/history" className="block py-2 px-4 rounded text-gray-300 hover:bg-gray-700 hover:text-white">
               History
             </a>
           </li>
         </ul>
-      </div>
+      </section>
     </nav>
   );
 };
