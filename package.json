@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.62.0",
     "apexcharts": "^3.54.1",
+    "d3": "^7.9.0",
     "flowbite": "^2.5.2",
     "papaparse": "^5.4.1",
     "react": "^18.3.1",
