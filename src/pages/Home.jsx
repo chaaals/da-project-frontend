@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import Button from "../components/Button";
 import DynamicTable from "../components/DynamicTable";
@@ -7,12 +7,22 @@ import DynamicTable from "../components/DynamicTable";
 import AppContext from "../context/app";
 import { useCustomNavigate } from "../hooks/useCustomNavigate";
 
-import { getReports } from "../queries/report";
+import { getReports, postReport } from "../queries/report";
 
 function Home() {
-  const { isPending, data, isFetching } = useQuery({
+  const { isSuccess, data } = useQuery({
     queryKey: ["reports"],
     queryFn: getReports,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: postReport,
+    onSuccess: () => {
+      console.log("Todo added successfully!");
+    },
+    onError: (error) => {
+      console.error("Error adding todo:", error);
+    },
   });
 
   const reportColumns = ["ID", "Report_Name", "Date"];
@@ -62,6 +72,15 @@ function Home() {
   } = useContext(AppContext);
 
   const { goto } = useCustomNavigate();
+
+  const onAddReport = () => {
+    const formData = new FormData();
+
+    formData.append("name", selectedFile.name);
+    formData.append("csv_upload", selectedFile);
+
+    mutate(formData);
+  };
 
   return (
     <section className="flex-col space-y-7 py-16 px-24 w-full">
@@ -153,6 +172,7 @@ function Home() {
         className="hidden"
         onChange={handleFileChange}
       />
+      <button onClick={onAddReport}>Test Add</button>
     </section>
   );
 }
