@@ -8,8 +8,21 @@ import AppContext from "../context/app";
 import { useCustomNavigate } from "../hooks/useCustomNavigate";
 
 import { getReports, postReport } from "../queries/report";
+import Table from "../components/Table";
+import useTable from "../hooks/useTable";
 
 function Home() {
+  const {
+    selectedFile,
+    fileInputRef,
+    handleButtonClick,
+    handleFileChange,
+    removeFile,
+  } = useContext(AppContext);
+
+  const { goto } = useCustomNavigate();
+  const { tableData } = useTable(selectedFile);
+
   const { isSuccess, data } = useQuery({
     queryKey: ["reports"],
     queryFn: getReports,
@@ -62,16 +75,6 @@ function Home() {
       date: "06-10-2024",
     },
   ];
-
-  const {
-    selectedFile,
-    fileInputRef,
-    handleButtonClick,
-    handleFileChange,
-    removeFile,
-  } = useContext(AppContext);
-
-  const { goto } = useCustomNavigate();
 
   const onAddReport = () => {
     const formData = new FormData();
@@ -149,6 +152,9 @@ function Home() {
               {selectedFile.name}
             </span>
           </header>
+
+          {tableData.length > 0 && <Table tableData={tableData} />}
+
           <aside className="flex gap-4 justify-end">
             <Button
               onClick={removeFile}
@@ -172,7 +178,6 @@ function Home() {
         className="hidden"
         onChange={handleFileChange}
       />
-      <button onClick={onAddReport}>Test Add</button>
     </section>
   );
 }
