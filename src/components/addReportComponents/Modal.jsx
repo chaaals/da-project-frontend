@@ -23,7 +23,7 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
   console.log({ columns });
 
   return (
-    <div
+    <section
       id="crud-modal"
       tabIndex="-1"
       aria-hidden="true"
@@ -47,7 +47,7 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

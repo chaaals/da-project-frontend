@@ -99,7 +99,6 @@ const ReportPage = () => {
   };
 
   const handleAddReport = () => {
-    const newTabId = `Report ${tabs.length + 1}`;
     const newTab = { id: newTabId, content: `${newTabId} Content` };
     setTabs((prevTabs) => [...prevTabs, newTab]);
     setActiveTab(newTabId);
