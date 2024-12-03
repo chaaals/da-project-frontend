@@ -22,7 +22,10 @@ export const getReport = async (id) => {
 export const postReport = async (payload) => {
   const res = await fetch(BASE_URL + "report/", {
     method: "POST",
-    body: payload,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
