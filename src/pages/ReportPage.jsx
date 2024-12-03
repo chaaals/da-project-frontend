@@ -1,11 +1,16 @@
-import { useState } from "react";
-import Modal from "../components/addReportComponents/Modal";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
-const Header = () => {
+import Modal from "../components/addReportComponents/Modal";
+import { getReport } from "../queries/report";
+import Spinner from "../components/Spinner";
+
+const Header = ({ report }) => {
+  const { name } = report;
   return (
     <section className="flex justify-between items-center p-2 bg-transparent">
-      <div className="text-white text-4xl font-semibold">Reports Page</div>
+      <div className="text-white text-4xl font-semibold">{name}</div>
       <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
         Download Reports
       </button>
@@ -72,10 +77,17 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
 
 const ReportPage = () => {
   const { reportId } = useParams();
+  const {
+    isLoading,
+    isFetching,
+    data: report,
+  } = useQuery({
+    queryKey: ["report"],
+    queryFn: () => getReport(reportId),
+  });
+
   const [showModal, setShowModal] = useState(false);
-  const [tabs, setTabs] = useState([
-    { id: "Overview", content: "Add a report to see summary of report here" },
-  ]);
+  const [tabs, setTabs] = useState([]);
   const [activeTab, setActiveTab] = useState("Overview");
 
   const handleAddTab = () => {
@@ -94,18 +106,38 @@ const ReportPage = () => {
     setShowModal(false);
   };
 
-  console.log({ reportId });
+  useEffect(() => {
+    if (!isLoading && !isFetching && report) {
+      setTabs((prev) => [
+        ...prev,
+        { id: "Overview", content: report.overview },
+      ]);
+    }
+  }, [isFetching, isLoading, report]);
+
   return (
     <section className="flex flex-col min-h-screen bg-transparent">
-      <Header />
-      <Tabs
-        tabs={tabs}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onAddTab={handleAddTab}
-      />
-      {showModal && (
-        <Modal toggleModal={handleModalClose} onAddReport={handleAddReport} />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-[75dvh]">
+          <Spinner />
+        </div>
+      ) : (
+        <>
+          <Header report={report} />
+          <Tabs
+            tabs={tabs}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            onAddTab={handleAddTab}
+          />
+          {showModal && (
+            <Modal
+              report={report}
+              toggleModal={handleModalClose}
+              onAddReport={handleAddReport}
+            />
+          )}
+        </>
       )}
     </section>
   );

@@ -4,9 +4,23 @@ import ModalGrid from "./ModalGrid";
 import ModalForm from "./ModalForm";
 import AskBytes from "./AskBytes";
 import Preview from "./Preview";
+import { useQuery } from "@tanstack/react-query";
+import { getColumns } from "../../queries/column";
+import Spinner from "../Spinner";
 
-const Modal = ({ toggleModal, onAddReport }) => {
+const Modal = ({ report, toggleModal, onAddReport }) => {
   const [selectedChart, setSelectedChart] = useState(null); // Track selected chart
+
+  const {
+    isLoading,
+    isFetching,
+    data: columns,
+  } = useQuery({
+    queryKey: ["columns"],
+    queryFn: () => getColumns(report.id),
+  });
+
+  console.log({ columns });
 
   return (
     <div
@@ -18,7 +32,10 @@ const Modal = ({ toggleModal, onAddReport }) => {
       <div className="relative p-6 w-full max-w-4xl max-h-[90vh] overflow-auto bg-gray-800 rounded-lg shadow-lg dark:bg-gray-900">
         <ModalHeader toggleModal={toggleModal} />
         <ModalGrid setSelectedChart={setSelectedChart} /> {/* Pass setter */}
-        <ModalForm selectedChart={selectedChart} /> {/* Pass selected chart */}
+        {isLoading || (isFetching && <Spinner />)}
+        {!isLoading && !isFetching && (
+          <ModalForm selectedChart={selectedChart} columns={columns} />
+        )}
         <Preview />
         <AskBytes />
         <div className="flex justify-end mt-4">

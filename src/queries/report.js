@@ -13,10 +13,15 @@ export const getReports = async () => {
 };
 
 export const getReport = async (id) => {
-  const res = await fetch(BASE_URL + `report/${id}/`, {
-    method: "GET",
-  });
-  return await res.json();
+  try {
+    const res = await fetch(BASE_URL + `report/${id}/`, {
+      method: "GET",
+    }).then((res) => res.json());
+
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 export const postReport = async (payload) => {

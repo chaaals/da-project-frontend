@@ -1,69 +1,27 @@
-import React from "react";
+import { useState } from "react";
 
-const ModalForm = ({ selectedChart }) => {
+const ModalForm = ({ selectedChart, columns }) => {
+  const isValidColumn = !selectedChart;
+
   return (
     <form className="p-5 md:p-2">
-      {selectedChart === "Circle" || selectedChart === "Donut" ? (
-        // Specific form for Circle Chart
-        <div className="col-span-2">
-          <label
-            htmlFor="data-field"
-            className="block mb-2 text-sm font-medium text-textPrimary"
-          >
-            Select a Data Field
-          </label>
-          <select
-            id="data-field"
-            className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          >
-            <option value="">Choose Field</option>
-            <option value="YearLevel">Year Level</option>
-            <option value="Gender">Gender</option>
-            <option value="Age">Age</option>
-            <option value="Degree">Degree Program</option>
-          </select>
-        </div>
-      ) : (
-        // Default form for other chart types
-        <div className="grid gap-4 mb-2 grid-cols-2">
-          <div className="col-span-2">
-            <label
-              htmlFor="x-axis"
-              className="block mb-2 text-sm font-medium text-textPrimary"
-            >
-              Select X-Axis
-            </label>
-            <select
-              id="X-axis"
-              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            >
-              <option>Select Data Field</option>
-              <option value="YearLevel">Year Level</option>
-              <option value="Gender">Gender</option>
-              <option value="Age">Age</option>
-              <option value="Degree">Degree Program</option>
-            </select>
-          </div>
-          <div className="col-span-2 mb-5">
-            <label
-              htmlFor="y-axis"
-              className="block mb-2 text-sm font-medium text-textPrimary"
-            >
-              Select Y-Axis
-            </label>
-            <select
-              id="y-axis"
-              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            >
-              <option>Select Data Field</option>
-              <option value="YearLevel">Year Level</option>
-              <option value="Gender">Gender</option>
-              <option value="Age">Age</option>
-              <option value="Degree">Degree Program</option>
-            </select>
-          </div>
-        </div>
-      )}
+      <section className="grid grid-cols-3 gap-4">
+        {columns.map((column, i) => {
+          return (
+            <div key={i} className="flex items-center">
+              <input
+                id={`${column.label}-${i}`}
+                type="checkbox"
+                checked={true}
+                onChange={() => console.log("lol")}
+                disabled={isValidColumn}
+                className="mr-2 h-4 w-4 text-blue-600 rounded"
+              />
+              <label htmlFor={`${column.label}-${i}`}>{column.label}</label>
+            </div>
+          );
+        })}
+      </section>
     </form>
   );
 };
