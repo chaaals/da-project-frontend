@@ -1,16 +1,18 @@
-import React, { useContext } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
+import AppContext from "../context/app";
+
+import { getReports, postReport } from "../queries/report";
+import { postCSV } from "../queries/csv";
+
+import Table from "../components/Table";
+import Spinner from "../components/Spinner";
 import Button from "../components/Button";
 import DynamicTable from "../components/DynamicTable";
 
-import AppContext from "../context/app";
-import { useCustomNavigate } from "../hooks/useCustomNavigate";
-
-import { getReports, postReport } from "../queries/report";
-import Table from "../components/Table";
 import useTable from "../hooks/useTable";
-import Spinner from "../components/Spinner";
 
 function Home() {
   const {
@@ -20,37 +22,66 @@ function Home() {
     handleFileChange,
     removeFile,
   } = useContext(AppContext);
+  const [step, setStep] = useState(1);
+  const navigate = useNavigate();
 
-  const { goto } = useCustomNavigate();
-  const { tableData } = useTable(selectedFile);
+  const { tableData, parseFetchedTable } = useTable(selectedFile);
 
   const { isFetching, isLoading, data } = useQuery({
     queryKey: ["reports"],
     queryFn: getReports,
   });
 
-  const { mutate } = useMutation({
-    mutationFn: postReport,
-    onSuccess: () => {
-      console.log("Todo added successfully!");
+  const {
+    data: cleanedColumns,
+    mutate: cleanCSV,
+    isPending: isCleaning,
+  } = useMutation({
+    mutationFn: postCSV,
+    onSuccess: (data) => {
+      console.log("Data has been cleaned");
+      parseFetchedTable(data);
+      setStep(2);
     },
     onError: (error) => {
-      console.error("Error adding todo:", error);
+      console.error("Oops, something went wrong.", error);
+    },
+  });
+
+  const { mutate: createReport, isPending: isCreating } = useMutation({
+    mutationFn: postReport,
+    onSuccess: (data) => {
+      const { report } = data;
+      navigate(`/report/${report.id}`);
+    },
+    onError: (error) => {
+      console.error("Oops, something went wrong.", error);
     },
   });
 
   const reportColumns = ["id", "name"];
 
-  const onAddReport = () => {
-    const formData = new FormData();
-
-    formData.append("name", selectedFile.name);
-    formData.append("csv_upload", selectedFile);
-
-    mutate(formData);
+  const onClearFile = () => {
+    removeFile();
+    setStep(1);
   };
 
-  console.log({ data });
+  const onCleanData = () => {
+    const formData = new FormData();
+    formData.append("csv_upload", selectedFile);
+
+    cleanCSV(formData);
+  };
+
+  const onAddReport = () => {
+    const [reportName] = selectedFile.name.split(".");
+    const payload = {
+      name: reportName,
+      clean_columns: cleanedColumns,
+    };
+
+    createReport(payload);
+  };
 
   return (
     <section className="flex-col space-y-7 py-16 px-24 w-full">
@@ -101,7 +132,7 @@ function Home() {
             </header>
             <div className="h-fit bg-colorSecondary rounded-xl py-6">
               {(isLoading || isFetching) && <Spinner />}
-              {!isLoading && (
+              {!isLoading && !isFetching && (
                 <DynamicTable columns={reportColumns} data={data} />
               )}
             </div>
@@ -127,17 +158,33 @@ function Home() {
 
           <aside className="flex gap-4 justify-end">
             <Button
-              onClick={removeFile}
+              onClick={onClearFile}
               style="bg-[#C81E1E] h-12 rounded-lg px-4 "
             >
               <span className="font-inter text-white">Clear</span>
             </Button>
-            <Button
-              onClick={() => goto("/report")}
-              style="bg-colorButton h-12 rounded-lg px-4"
-            >
-              <span className="font-inter text-white">Create Report</span>
-            </Button>
+            {step === 1 && (
+              <Button
+                onClick={onCleanData}
+                style="w-32 bg-colorButton h-12 rounded-lg px-4"
+              >
+                {isCleaning && <Spinner />}
+                {!isCleaning && (
+                  <span className="font-inter text-white">Clean Data</span>
+                )}
+              </Button>
+            )}
+            {step === 2 && (
+              <Button
+                onClick={onAddReport}
+                style="w-32 bg-colorButton h-12 rounded-lg px-4"
+              >
+                {isCreating && <Spinner />}
+                {!isCreating && (
+                  <span className="font-inter text-white">Create Report</span>
+                )}
+              </Button>
+            )}
           </aside>
         </section>
       )}
