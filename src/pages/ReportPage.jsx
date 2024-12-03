@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Modal from "../components/addReportComponents/Modal";
+import { useParams } from "react-router-dom";
 
-// Header Component
 const Header = () => {
   return (
     <section className="flex justify-between items-center p-2 bg-transparent">
@@ -13,7 +13,6 @@ const Header = () => {
   );
 };
 
-// Tabs Component
 const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
@@ -39,11 +38,11 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
         ))}
         <li className="me-2">
           <button
-            onClick={onAddTab} // Open modal
+            onClick={onAddTab}
             className="inline-block p-5 border-transparent"
           >
             <img
-              src="./images/circle-plus.svg"
+              src="/images/circle-plus.svg"
               alt="Add Tab"
               className="w-6 h-6"
             />
@@ -71,30 +70,31 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
   );
 };
 
-// ReportPage Component
 const ReportPage = () => {
-  const [showModal, setShowModal] = useState(false); // Control modal visibility
+  const { reportId } = useParams();
+  const [showModal, setShowModal] = useState(false);
   const [tabs, setTabs] = useState([
     { id: "Overview", content: "Add a report to see summary of report here" },
   ]);
   const [activeTab, setActiveTab] = useState("Overview");
 
   const handleAddTab = () => {
-    setShowModal(true); // Open modal
+    setShowModal(true);
   };
 
   const handleModalClose = () => {
-    setShowModal(false); // Close modal
+    setShowModal(false);
   };
 
   const handleAddReport = () => {
-    const newTabId = `Report ${tabs.length + 1}`; // Generate unique ID
+    const newTabId = `Report ${tabs.length + 1}`;
     const newTab = { id: newTabId, content: `${newTabId} Content` };
-    setTabs((prevTabs) => [...prevTabs, newTab]); // Add new tab
-    setActiveTab(newTabId); // Set the new tab as active
-    setShowModal(false); // Close modal
+    setTabs((prevTabs) => [...prevTabs, newTab]);
+    setActiveTab(newTabId);
+    setShowModal(false);
   };
 
+  console.log({ reportId });
   return (
     <section className="flex flex-col min-h-screen bg-transparent">
       <Header />
@@ -105,10 +105,7 @@ const ReportPage = () => {
         onAddTab={handleAddTab}
       />
       {showModal && (
-        <Modal
-          toggleModal={handleModalClose} // Close modal handler
-          onAddReport={handleAddReport} // Add report handler
-        />
+        <Modal toggleModal={handleModalClose} onAddReport={handleAddReport} />
       )}
     </section>
   );
