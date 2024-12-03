@@ -10,6 +10,7 @@ import { useCustomNavigate } from "../hooks/useCustomNavigate";
 import { getReports, postReport } from "../queries/report";
 import Table from "../components/Table";
 import useTable from "../hooks/useTable";
+import Spinner from "../components/Spinner";
 
 function Home() {
   const {
@@ -23,7 +24,7 @@ function Home() {
   const { goto } = useCustomNavigate();
   const { tableData } = useTable(selectedFile);
 
-  const { isSuccess, data } = useQuery({
+  const { isFetching, isLoading, data } = useQuery({
     queryKey: ["reports"],
     queryFn: getReports,
   });
@@ -38,43 +39,7 @@ function Home() {
     },
   });
 
-  const reportColumns = ["ID", "Report_Name", "Date"];
-  const reportData = [
-    { ID: 1, Report_Name: "Student Performance Overview", Date: "09-22-2024" },
-    { id: 2, Report_Name: "Academic Trends and Insights", date: "02-14-2024" },
-    { id: 3, Report_Name: "Student Enrollment Statistics", date: "07-04-2024" },
-    { id: 4, Report_Name: "Grade Distribution Analysis", date: "03-20-2024" },
-    {
-      id: 5,
-      Report_Name: "Attendance and Participation Trends",
-      date: "05-30-2024",
-    },
-    {
-      id: 6,
-      Report_Name: "Demographic Breakdown of Students",
-      date: "12-01-2023",
-    },
-    {
-      id: 7,
-      Report_Name: "Student Success and Retention Rates",
-      date: "08-18-2024",
-    },
-    {
-      id: 8,
-      Report_Name: "Year-over-Year Academic Progress",
-      date: "01-15-2024",
-    },
-    {
-      id: 9,
-      Report_Name: "Student Engagement and Interaction Metrics",
-      date: "04-25-2024",
-    },
-    {
-      id: 10,
-      Report_Name: "Performance Comparison by Subject",
-      date: "06-10-2024",
-    },
-  ];
+  const reportColumns = ["id", "name"];
 
   const onAddReport = () => {
     const formData = new FormData();
@@ -84,6 +49,8 @@ function Home() {
 
     mutate(formData);
   };
+
+  console.log({ data });
 
   return (
     <section className="flex-col space-y-7 py-16 px-24 w-full">
@@ -133,7 +100,10 @@ function Home() {
               </h1>
             </header>
             <div className="h-fit bg-colorSecondary rounded-xl py-6">
-              <DynamicTable columns={reportColumns} data={reportData} />
+              {(isLoading || isFetching) && <Spinner />}
+              {!isLoading && (
+                <DynamicTable columns={reportColumns} data={data} />
+              )}
             </div>
           </section>
         </>
