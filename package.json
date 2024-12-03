@@ -19,7 +19,6 @@
     "react-apexcharts": "^1.5.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
-    "topojson-client": "^3.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
