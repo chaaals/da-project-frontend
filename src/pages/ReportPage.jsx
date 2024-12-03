@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 const Header = () => {
   return (
     <section className="flex justify-between items-center p-2 bg-transparent">
-      <div className="text-white text-4xl font-semibold">Reports Page</div>
+      <header className="text-white text-4xl font-semibold">Reports Page</header>
       <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
         Download Reports
       </button>
@@ -87,7 +87,6 @@ const ReportPage = () => {
   };
 
   const handleAddReport = () => {
-    const newTabId = `Report ${tabs.length + 1}`;
     const newTab = { id: newTabId, content: `${newTabId} Content` };
     setTabs((prevTabs) => [...prevTabs, newTab]);
     setActiveTab(newTabId);
@@ -96,7 +95,7 @@ const ReportPage = () => {
 
   console.log({ reportId });
   return (
-    <section className="flex flex-col min-h-screen bg-transparent">
+    <section className="flex flex-col min-h-screen bg-transparent py-16 px-24">
       <Header />
       <Tabs
         tabs={tabs}

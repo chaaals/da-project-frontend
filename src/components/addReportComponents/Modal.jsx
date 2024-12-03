@@ -9,7 +9,7 @@ const Modal = ({ toggleModal, onAddReport }) => {
   const [selectedChart, setSelectedChart] = useState(null); // Track selected chart
 
   return (
-    <div
+    <section
       id="crud-modal"
       tabIndex="-1"
       aria-hidden="true"
@@ -17,8 +17,8 @@ const Modal = ({ toggleModal, onAddReport }) => {
     >
       <div className="relative p-6 w-full max-w-4xl max-h-[90vh] overflow-auto bg-gray-800 rounded-lg shadow-lg dark:bg-gray-900">
         <ModalHeader toggleModal={toggleModal} />
-        <ModalGrid setSelectedChart={setSelectedChart} /> {/* Pass setter */}
-        <ModalForm selectedChart={selectedChart} /> {/* Pass selected chart */}
+        <ModalGrid setSelectedChart={setSelectedChart} />
+        <ModalForm selectedChart={selectedChart} />
         <Preview />
         <AskBytes />
         <div className="flex justify-end mt-4">
@@ -30,7 +30,7 @@ const Modal = ({ toggleModal, onAddReport }) => {
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
