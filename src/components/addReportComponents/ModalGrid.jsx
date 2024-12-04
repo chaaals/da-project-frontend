@@ -1,20 +1,20 @@
 import React from "react";
 
 const chartIcons = {
-  Scatter: "/images/charts/scatter-plot.svg",
-  Pie: "/images/charts/pie-chart.svg",
-  Bubble: "/images/charts/bubble-chart.svg",
-  Funnel: "/images/charts/funnel-chart.svg",
-  Geo: "/images/charts/geo-chart.svg",
+  scatter: "/images/charts/scatter-plot.svg",
+  pie: "/images/charts/pie-chart.svg",
+  bubble: "/images/charts/bubble-chart.svg",
+  funnel: "/images/charts/funnel-chart.svg",
+  stackedbar: "/images/charts/stacked-bar.svg",
 };
 
 const ModalGrid = ({ setSelectedChart }) => {
   const buttons = [
-    { label: "Scatter Plot", type: "Scatter" },
-    { label: "Pie Chart", type: "Pie" },
-    { label: "Bubble Chart", type: "Bubble" },
-    { label: "Funnel Chart", type: "Funnel" },
-    { label: "Geo Chart", type: "Geo" },
+    { label: "Scatter Plot", type: "scatter" },
+    { label: "Pie Chart", type: "pie" },
+    { label: "Bubble Chart", type: "bubble" },
+    { label: "Funnel Chart", type: "funnel" },
+    { label: "Stacked Bar Chart", type: "stacked Bar" },
   ];
 
   return (
