@@ -3,12 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 
 import ModalHeader from "./ModalHeader";
 import ModalForm from "./ModalForm";
-import AskBytes from "./AskBytes";
 import Preview from "./Preview";
 import Spinner from "../Spinner";
 
 import { rules } from "./rules";
 import { getColumns } from "../../queries/column";
+import useChart from "../../hooks/useChart";
 
 const chartIcons = {
   scatter: "/images/charts/scatter-plot.svg",
@@ -41,6 +41,8 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [chartData, setChartData] = useState({});
 
+  const { chart } = useChart({ selectedChart, chartData });
+
   const {
     isLoading,
     isFetching,
@@ -55,8 +57,6 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
     setSelectedChart(chart);
     setChartData(CHART_DATA_TEMPLATE[rules[chart].type]);
   };
-
-  console.log({ chartData });
 
   return (
     <section
@@ -73,7 +73,11 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
             <button
               key={index}
               onClick={() => onSelectChart(button.type)}
-              className="flex flex-col items-center justify-center p-4 text-white bg-gray-700 hover:bg-gray-600 rounded-lg shadow-md focus:ring-2 focus:ring-blue-500"
+              className={`flex flex-col items-center justify-center p-4 text-white rounded-lg shadow-md focus:ring-2 focus:ring-blue-500 ${
+                selectedChart === button.type
+                  ? "bg-gray-700 hover:bg-gray-600"
+                  : "bg-gray-600 hover:bg-gray-700"
+              }`}
             >
               <img
                 src={chartIcons[button.type]}
@@ -90,11 +94,13 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
           <ModalForm
             columns={columns}
             selectedChart={selectedChart}
+            chartData={chartData}
             setChartData={setChartData}
           />
         )}
-        <Preview />
-        <AskBytes />
+
+        {chart && <Preview>{chart}</Preview>}
+
         <div className="flex justify-end mt-4">
           <button
             onClick={onAddReport} // Trigger add report

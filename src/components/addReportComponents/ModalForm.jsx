@@ -13,7 +13,10 @@ const CARTESIAN_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
 
     setChartData((prev) => ({
       ...prev,
-      [name]: columns.filter((col) => col.label === value),
+      [name]:
+        value !== "0"
+          ? columns.filter((col) => col.label === value)
+          : undefined,
     }));
   };
 
@@ -32,7 +35,7 @@ const CARTESIAN_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
           className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           onChange={onSelect}
         >
-          <option>Select X Axis</option>
+          <option value={0}>Select X Axis</option>
           {options.map((opt, i) => (
             <option key={`${opt.label}-${i}`} value={opt.label}>
               {opt.label}
@@ -51,8 +54,9 @@ const CARTESIAN_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
           id="cartesian-input-y"
           name="y"
           className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          onChange={onSelect}
         >
-          <option>Select Y Axis</option>
+          <option value={undefined}>Select Y Axis</option>
           {options.map((opt, i) => (
             <option key={`${opt.label}-${i}`} value={opt.label}>
               {opt.label}
