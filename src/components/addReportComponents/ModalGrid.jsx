@@ -1,5 +1,3 @@
-import React from "react";
-
 const chartIcons = {
   scatter: "/images/charts/scatter-plot.svg",
   pie: "/images/charts/pie-chart.svg",

@@ -165,10 +165,31 @@ const CATEGORICAL_DATA_INPUT = ({
 };
 
 const ModalForm = ({ columns, selectedChart, chartData, setChartData }) => {
+  const onChange = (event) => {
+    const { name, value } = event.target;
+
+    setChartData((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <>
       {selectedChart && (
         <form className="p-5 md:p-2">
+          <section className="mb-4">
+            <label
+              htmlFor="chart-title"
+              className="block mb-2 text-sm font-medium text-textPrimary"
+            >
+              Chart Title
+            </label>
+            <input
+              id="chart-title"
+              name="title"
+              placeholder="Enter Chart Title..."
+              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={onChange}
+            />
+          </section>
           {rules[selectedChart].type === "cartesian" && (
             <CARTESIAN_DATA_INPUT
               columns={columns}

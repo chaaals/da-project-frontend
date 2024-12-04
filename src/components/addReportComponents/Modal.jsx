@@ -32,13 +32,12 @@ const CHART_DATA_TEMPLATE = {
     y: undefined,
   },
   categorical: {
-    data: [],
+    data: undefined,
   },
 };
 
 const Modal = ({ report, toggleModal, onAddReport }) => {
-  const [selectedChart, setSelectedChart] = useState(null); // Track selected chart
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedChart, setSelectedChart] = useState(null);
   const [chartData, setChartData] = useState({});
 
   const { chart } = useChart({ selectedChart, chartData });
@@ -53,9 +52,11 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
   });
 
   const onSelectChart = (chart) => {
-    if (selectedOptions.length > 0) setSelectedOptions([]);
     setSelectedChart(chart);
-    setChartData(CHART_DATA_TEMPLATE[rules[chart].type]);
+    setChartData({
+      title: undefined,
+      ...CHART_DATA_TEMPLATE[rules[chart].type],
+    });
   };
 
   return (
@@ -103,7 +104,7 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
 
         <div className="flex justify-end mt-4">
           <button
-            onClick={onAddReport} // Trigger add report
+            onClick={onAddReport}
             className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Add Report

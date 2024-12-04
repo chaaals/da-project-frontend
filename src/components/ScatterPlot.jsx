@@ -3,6 +3,7 @@ import * as d3 from "d3";
 
 const ScatterPlot = ({
   data,
+  title = "Scatter Plot",
   xLabel = "x",
   yLabel = "y",
   width = 500,
@@ -16,10 +17,7 @@ const ScatterPlot = ({
       .attr("width", width)
       .attr("height", height);
 
-    svg.selectAll(".x-axis").remove();
-    svg.selectAll(".y-axis").remove();
-    svg.selectAll(".x-label").remove();
-    svg.selectAll(".y-label").remove();
+    d3.select(ref.current).selectAll("*").remove();
 
     const xScale = d3
       .scaleLinear()
@@ -48,6 +46,16 @@ const ScatterPlot = ({
 
     svg
       .append("text")
+      .attr("class", "title")
+      .attr("x", width / 2)
+      .attr("y", 20)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "16px")
+      .attr("font-weight", "bold")
+      .text(title);
+
+    svg
+      .append("text")
       .attr("class", "x-label")
       .attr("x", width / 2)
       .attr("y", height - 5)
@@ -70,7 +78,7 @@ const ScatterPlot = ({
       .attr("text-anchor", "middle")
       .style("font-size", "12px")
       .text(yLabel);
-  }, [data, width, height, xLabel, yLabel]);
+  }, [data, width, height, xLabel, yLabel, title]);
 
   return <svg ref={ref}></svg>;
 };
