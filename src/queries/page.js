@@ -26,8 +26,11 @@ export const getPage = async (reportId, pageId) => {
 
 export const postPage = async (payload) => {
   const { reportId, data } = payload;
-  const res = await fetch(BASE_URL + `${reportId}/page/`, {
+  const res = await fetch(BASE_URL + `report/${reportId}/page/`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   });
 

@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-
-const Preview = () => {
+const Preview = ({ children }) => {
   return (
     <>
       <div className="p-5 md:p-2 col-span-2 ">
@@ -9,6 +7,10 @@ const Preview = () => {
             Preview
           </h1>
         </header>
+
+        <div className="w-full flex items-center justify-center bg-white rounded-xl">
+          {children}
+        </div>
       </div>
     </>
   );

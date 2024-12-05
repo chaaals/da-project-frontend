@@ -1,7 +1,14 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const ScatterPlot = ({ data, width = 500, height = 400 }) => {
+const ScatterPlot = ({
+  data,
+  title = "Scatter Plot",
+  xLabel = "x",
+  yLabel = "y",
+  width = 500,
+  height = 400,
+}) => {
   const ref = useRef();
 
   useEffect(() => {
@@ -9,6 +16,8 @@ const ScatterPlot = ({ data, width = 500, height = 400 }) => {
       .select(ref.current)
       .attr("width", width)
       .attr("height", height);
+
+    d3.select(ref.current).selectAll("*").remove();
 
     const xScale = d3
       .scaleLinear()
@@ -31,14 +40,45 @@ const ScatterPlot = ({ data, width = 500, height = 400 }) => {
 
     svg
       .append("g")
+      .attr("class", "x-axis")
       .attr("transform", `translate(0, ${height - 40})`)
       .call(d3.axisBottom(xScale));
 
     svg
+      .append("text")
+      .attr("class", "title")
+      .attr("x", width / 2)
+      .attr("y", 20)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "16px")
+      .attr("font-weight", "bold")
+      .text(title);
+
+    svg
+      .append("text")
+      .attr("class", "x-label")
+      .attr("x", width / 2)
+      .attr("y", height - 5)
+      .attr("text-anchor", "middle")
+      .style("font-size", "12px")
+      .text(xLabel);
+
+    svg
       .append("g")
+      .attr("class", "y-axis")
       .attr("transform", `translate(40, 0)`)
       .call(d3.axisLeft(yScale));
-  }, [data, width, height]);
+
+    svg
+      .append("text")
+      .attr("class", "y-label")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -height / 2)
+      .attr("y", 8)
+      .attr("text-anchor", "middle")
+      .style("font-size", "12px")
+      .text(yLabel);
+  }, [data, width, height, xLabel, yLabel, title]);
 
   return <svg ref={ref}></svg>;
 };
