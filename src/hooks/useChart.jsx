@@ -85,7 +85,30 @@ const generateChart = (selectedChart, chartData) => {
 
       return <PieChart title={title} data={pieData} />;
     }
-    case "bubble":
+    case "bubble": {
+      const { x, y, r, title } = chartData;
+      if (!x || !y || !r) return null;
+
+      const [xCol] = x;
+      const [yCol] = y;
+      const [rCol] = r;
+
+      const { label: xLabel, rows: xData } = xCol;
+      const { label: yLabel, rows: yData } = yCol;
+      const { label: rLabel, rows: rData } = rCol;
+
+      const bubbleData = xData.map((x, i) => ({ x, y: yData[i], r: rData[i] }));
+
+      return (
+        <BubbleChart
+          title={title}
+          data={bubbleData}
+          xLabel={xLabel}
+          yLabel={yLabel}
+          rLabel={rLabel}
+        />
+      );
+    }
     case "funnel":
     default:
       return null;
@@ -103,6 +126,7 @@ const useChart = ({ selectedChart, chartData }) => {
     }
   }, [selectedChart, chartData]);
 
+  console.log({ chartData });
   return { chart };
 };
 

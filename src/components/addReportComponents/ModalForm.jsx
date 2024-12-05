@@ -64,6 +64,29 @@ const CARTESIAN_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
           ))}
         </select>
       </div>
+      {selectedChart === "bubble" && (
+        <div>
+          <label
+            htmlFor="cartesian-input-r"
+            className="block mb-2 text-sm font-medium text-textPrimary"
+          >
+            R Value (Bubble Size)
+          </label>
+          <select
+            id="cartesian-input-r"
+            name="r"
+            className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            onChange={onSelect}
+          >
+            <option value={undefined}>Select Bubble Radius</option>
+            {options.map((opt, i) => (
+              <option key={`${opt.label}-${i}`} value={opt.label}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
     </section>
   );
 };

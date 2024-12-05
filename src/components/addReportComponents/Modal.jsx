@@ -30,6 +30,7 @@ const CHART_DATA_TEMPLATE = {
   cartesian: {
     x: undefined,
     y: undefined,
+    r: undefined,
   },
   categorical: {
     data: undefined,
