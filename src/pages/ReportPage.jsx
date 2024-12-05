@@ -98,13 +98,6 @@ const ReportPage = () => {
     setShowModal(false);
   };
 
-  const handleAddReport = () => {
-    const newTab = { id: newTabId, content: `${newTabId} Content` };
-    setTabs((prevTabs) => [...prevTabs, newTab]);
-    setActiveTab(newTabId);
-    setShowModal(false);
-  };
-
   useEffect(() => {
     if (!isLoading && !isFetching && report) {
       setTabs([{ id: "Overview", content: report.overview }]);
@@ -127,11 +120,7 @@ const ReportPage = () => {
             onAddTab={handleAddTab}
           />
           {showModal && (
-            <Modal
-              report={report}
-              toggleModal={handleModalClose}
-              onAddReport={handleAddReport}
-            />
+            <Modal report={report} toggleModal={handleModalClose} />
           )}
         </>
       )}

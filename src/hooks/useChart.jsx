@@ -5,6 +5,14 @@ import PieChart from "../components/PieChart";
 import ScatterPlot from "../components/ScatterPlot";
 import StackedBarChart from "../components/StackedBar";
 
+const chartEnums = {
+  scatter: "SCATTER_PLOT",
+  pie: "PIE_CHART",
+  bubble: "BUBBLE_CHART",
+  funnel: "FUNNEL_CHART",
+  stackedbar: "STACKED_BAR_CHART",
+};
+
 const aggregateStackedBarData = (cat, col1, col2) => {
   const { rows: catData } = cat;
   const { label: col1Label, rows: col1Data } = col1;
@@ -60,6 +68,7 @@ const generateFrequencyTable = (rows) => {
 
 const generateChart = (selectedChart, chartData) => {
   switch (selectedChart) {
+    case chartEnums.scatter:
     case "scatter": {
       const { x, y, title } = chartData;
       if (!x || !y) return null;
@@ -81,7 +90,7 @@ const generateChart = (selectedChart, chartData) => {
         />
       );
     }
-
+    case chartEnums.pie:
     case "pie": {
       const { title, data } = chartData;
       if (!data) return null;
@@ -99,7 +108,7 @@ const generateChart = (selectedChart, chartData) => {
 
       return <PieChart title={title} data={pieData} />;
     }
-
+    case chartEnums.bubble:
     case "bubble": {
       const { title, x, y, r } = chartData;
       if (!x || !y || !r) return null;
@@ -124,7 +133,7 @@ const generateChart = (selectedChart, chartData) => {
         />
       );
     }
-
+    case chartEnums.funnel:
     case "funnel": {
       const { title, data } = chartData;
       if (!data) return null;
@@ -141,7 +150,7 @@ const generateChart = (selectedChart, chartData) => {
 
       return <FunnelChart title={title} data={funnelData} />;
     }
-
+    case chartEnums.stackedbar:
     case "stackedbar": {
       const { title, category, col1, col2 } = chartData;
       if (!category || !col1 || !col2) return null;
@@ -162,6 +171,32 @@ const generateChart = (selectedChart, chartData) => {
 const useChart = ({ selectedChart, chartData }) => {
   const [chart, setChart] = useState(null);
 
+  const getLabels = (chartData) => {
+    const { x, y, r, data, category, col1, col2 } = chartData;
+
+    if ((x && y) || (x && y && r)) {
+      const [{ label: xLabel }] = x;
+      const [{ label: yLabel }] = y;
+      const [{ label: rLabel }] = r ?? [{}];
+
+      return [xLabel, yLabel, rLabel].filter((label) => label).join(",");
+    }
+
+    if (data) {
+      const [{ label: dataLabel }] = data;
+      return dataLabel;
+    }
+
+    if (category && col1 && col2) {
+      console.log({ category });
+      const [{ label: catLabel }] = category;
+      const [{ label: col1Label }] = col1;
+      const [{ label: col2Label }] = col2;
+
+      return [catLabel, col1Label, col2Label].join(",");
+    }
+  };
+
   useEffect(() => {
     if (selectedChart) {
       const _chart = generateChart(selectedChart, chartData);
@@ -170,7 +205,7 @@ const useChart = ({ selectedChart, chartData }) => {
     }
   }, [selectedChart, chartData]);
 
-  return { chart };
+  return { chart, chartEnums, getLabels };
 };
 
 export default useChart;
