@@ -170,7 +170,6 @@ const useChart = ({ selectedChart, chartData }) => {
     }
   }, [selectedChart, chartData]);
 
-  console.log({ chartData });
   return { chart };
 };
 

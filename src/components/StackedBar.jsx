@@ -33,13 +33,13 @@ const StackedBarChart = ({
       .range([0, width])
       .padding(0.2);
 
-    const yScale = d3
-      .scaleLinear()
-      .domain([
-        0,
-        d3.max(data, (d) => keys.reduce((sum, key) => sum + d[key], 0)),
-      ])
-      .range([height, 0]);
+    const yMax = d3.max(data, (d) =>
+      keys.reduce((sum, key) => sum + (Number(d[key]) || 0), 0)
+    );
+
+    const yScale = d3.scaleLinear().domain([0, yMax]).nice().range([height, 0]);
+
+    console.log({ yMax });
 
     const stackedData = d3.stack().keys(keys)(data);
 
@@ -91,13 +91,14 @@ const StackedBarChart = ({
         .attr("alignment-baseline", "middle");
     });
 
-    svg
+    container
+      .select("svg")
       .append("text")
       .attr("class", "title")
-      .attr("x", width / 2)
-      .attr("y", 20)
+      .attr("x", (width + margin.left + margin.right) / 2)
+      .attr("y", margin.top / 2)
       .attr("text-anchor", "middle")
-      .attr("font-size", "16px")
+      .attr("font-size", "20px")
       .attr("font-weight", "bold")
       .text(title);
   }, [data, keys, width, height, title]);
