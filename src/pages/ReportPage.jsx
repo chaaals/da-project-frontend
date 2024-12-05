@@ -107,10 +107,7 @@ const ReportPage = () => {
 
   useEffect(() => {
     if (!isLoading && !isFetching && report) {
-      setTabs((prev) => [
-        ...prev,
-        { id: "Overview", content: report.overview },
-      ]);
+      setTabs([{ id: "Overview", content: report.overview }]);
     }
   }, [isFetching, isLoading, report]);
 

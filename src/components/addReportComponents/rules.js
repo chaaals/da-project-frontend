@@ -11,5 +11,9 @@ export const rules = {
     limit: 0,
     dataTypes: ["NUMBER", "BOOLEAN", "STRING"],
   },
-  stackedbar: { limit: 3, dataTypes: ["NUMBER"] },
+  stackedbar: {
+    type: "categorical",
+    limit: 3,
+    dataTypes: ["NUMBER", "STRING"],
+  },
 };

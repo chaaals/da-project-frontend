@@ -34,6 +34,10 @@ const CHART_DATA_TEMPLATE = {
   },
   categorical: {
     data: undefined,
+    category: undefined,
+    col1: undefined,
+    col2: undefined,
+    col3: undefined,
   },
 };
 

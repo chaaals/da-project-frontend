@@ -109,29 +109,122 @@ const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
   };
 
   return (
-    <section>
-      <>
-        <label
-          htmlFor="categorical-input"
-          className="block mb-2 text-sm font-medium text-textPrimary"
-        >
-          Chart Data
-        </label>
-        <select
-          id="categorical-input"
-          name="data"
-          className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          onChange={onSelect}
-        >
-          <option>Select Data Source</option>
-          {options.map((opt, i) => (
-            <option key={`${opt.label}-${i}`} value={opt.label}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </>
-    </section>
+    <>
+      {selectedChart === "pie" || selectedChart === "funnel" ? (
+        <section>
+          <>
+            <label
+              htmlFor="categorical-input"
+              className="block mb-2 text-sm font-medium text-textPrimary"
+            >
+              Chart Data
+            </label>
+            <select
+              id="categorical-input"
+              name="data"
+              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={onSelect}
+            >
+              <option>Select Data Source</option>
+              {options.map((opt, i) => (
+                <option key={`${opt.label}-${i}`} value={opt.label}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </>
+        </section>
+      ) : (
+        <section className="w-full grid gap-4 mb-2 grid-cols-2">
+          <div>
+            <label
+              htmlFor="category"
+              className="block mb-2 text-sm font-medium text-textPrimary"
+            >
+              Category
+            </label>
+            <select
+              id="category"
+              name="category"
+              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={onSelect}
+            >
+              <option value={0}>Select X Axis</option>
+              {options.map((opt, i) => (
+                <option key={`${opt.label}-${i}`} value={opt.label}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label
+              htmlFor="col1"
+              className="block mb-2 text-sm font-medium text-textPrimary"
+            >
+              Column 1
+            </label>
+            <select
+              id="col1"
+              name="col1"
+              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={onSelect}
+            >
+              <option value={undefined}>Select Y Axis</option>
+              {options.map((opt, i) => (
+                <option key={`${opt.label}-${i}`} value={opt.label}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="col2"
+              className="block mb-2 text-sm font-medium text-textPrimary"
+            >
+              Column 2
+            </label>
+            <select
+              id="col2"
+              name="col2"
+              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={onSelect}
+            >
+              <option value={undefined}>Select Bubble Radius</option>
+              {options.map((opt, i) => (
+                <option key={`${opt.label}-${i}`} value={opt.label}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="col3"
+              className="block mb-2 text-sm font-medium text-textPrimary"
+            >
+              Column 3
+            </label>
+            <select
+              id="col3"
+              name="col3"
+              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={onSelect}
+            >
+              <option value={undefined}>Select Bubble Radius</option>
+              {options.map((opt, i) => (
+                <option key={`${opt.label}-${i}`} value={opt.label}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </section>
+      )}
+    </>
   );
 };
 
