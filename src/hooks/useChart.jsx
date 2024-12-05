@@ -85,8 +85,9 @@ const generateChart = (selectedChart, chartData) => {
 
       return <PieChart title={title} data={pieData} />;
     }
+
     case "bubble": {
-      const { x, y, r, title } = chartData;
+      const { title, x, y, r } = chartData;
       if (!x || !y || !r) return null;
 
       const [xCol] = x;
@@ -109,7 +110,24 @@ const generateChart = (selectedChart, chartData) => {
         />
       );
     }
-    case "funnel":
+
+    case "funnel": {
+      const { title, data } = chartData;
+      if (!data) return null;
+
+      const [column] = data;
+      const { rows } = column;
+
+      const freqTable = generateFrequencyTable(rows);
+
+      const funnelData = freqTable.map((data) => {
+        const [label, value] = data;
+        return { label, value };
+      });
+
+      return <FunnelChart title={title} data={funnelData} />;
+    }
+
     default:
       return null;
   }

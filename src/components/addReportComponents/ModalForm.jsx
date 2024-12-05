@@ -91,12 +91,7 @@ const CARTESIAN_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
   );
 };
 
-const CATEGORICAL_DATA_INPUT = ({
-  columns,
-  selectedChart,
-  chartData,
-  setChartData,
-}) => {
+const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
   const options = columns.filter(
     (column) =>
       rules[selectedChart].dataTypes.some(
@@ -113,76 +108,29 @@ const CATEGORICAL_DATA_INPUT = ({
     }));
   };
 
-  const onToggleCheck = (column) => {
-    setChartData((prev) => {
-      const { data } = prev;
-      const isExisting = data.some((col) => col.label === column.label);
-
-      if (isExisting) {
-        return { data: data.filter((col) => col.label !== column.label) };
-      }
-
-      return { data: [...data, column] };
-    });
-  };
-
   return (
     <section>
-      {selectedChart === "funnel" && (
-        <>
-          <h2 className="block mb-2 text-sm font-medium text-textPrimary">
-            Chart Data
-          </h2>
-          <section className="w-full grid gap-4 mb-2 grid-cols-3">
-            {options.map((opt, i) => (
-              <div
-                key={`${opt.label}-${i}`}
-                className="flex gap-2 items-center"
-              >
-                <input
-                  id={`${opt.label}-${i}`}
-                  className="mr-2 h-4 w-4 text-blue-600 rounded"
-                  type="checkbox"
-                  onChange={() => onToggleCheck(opt)}
-                  checked={chartData?.data?.some(
-                    (col) => col.label === opt.label
-                  )}
-                />
-                <label
-                  htmlFor={`${opt.label}-${i}`}
-                  className="text-textPrimary"
-                >
-                  {opt.label}
-                </label>
-              </div>
-            ))}
-          </section>
-        </>
-      )}
-
-      {selectedChart === "pie" && (
-        <>
-          <label
-            htmlFor="categorical-input"
-            className="block mb-2 text-sm font-medium text-textPrimary"
-          >
-            Chart Data
-          </label>
-          <select
-            id="categorical-input"
-            name="data"
-            className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            onChange={onSelect}
-          >
-            <option>Select Data Source</option>
-            {options.map((opt, i) => (
-              <option key={`${opt.label}-${i}`} value={opt.label}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </>
-      )}
+      <>
+        <label
+          htmlFor="categorical-input"
+          className="block mb-2 text-sm font-medium text-textPrimary"
+        >
+          Chart Data
+        </label>
+        <select
+          id="categorical-input"
+          name="data"
+          className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          onChange={onSelect}
+        >
+          <option>Select Data Source</option>
+          {options.map((opt, i) => (
+            <option key={`${opt.label}-${i}`} value={opt.label}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </>
     </section>
   );
 };

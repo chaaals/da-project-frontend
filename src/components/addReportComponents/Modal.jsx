@@ -92,6 +92,7 @@ const Modal = ({ report, toggleModal, onAddReport }) => {
         </div>
 
         {isLoading || (isFetching && <Spinner />)}
+
         {!isLoading && !isFetching && (
           <ModalForm
             columns={columns}

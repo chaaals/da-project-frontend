@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const FunnelChart = ({ data, width = 400, height = 500 }) => {
+const FunnelChart = ({
+  data,
+  width = 400,
+  height = 500,
+  title = "Funnel Chart",
+}) => {
   const ref = useRef();
 
   useEffect(() => {
@@ -12,18 +17,31 @@ const FunnelChart = ({ data, width = 400, height = 500 }) => {
 
     svg.selectAll("*").remove();
 
+    const titleHeight = 40;
+    const chartHeight = height - titleHeight;
+
     const total = d3.sum(data, (d) => d.value);
-    const funnelHeight = height / data.length;
+    const funnelHeight = chartHeight / data.length;
 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", titleHeight / 2)
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "middle")
+      .text(title)
+      .style("font-size", "20px")
+      .style("font-weight", "bold");
 
     data.forEach((d, i) => {
       const currentWidth = (d.value / total) * width;
       const nextWidth =
         i < data.length - 1 ? (data[i + 1].value / total) * width : 0;
 
-      const topY = i * funnelHeight;
-      const bottomY = (i + 1) * funnelHeight;
+      const topY = i * funnelHeight + titleHeight;
+      const bottomY = (i + 1) * funnelHeight + titleHeight;
 
       const polygonPoints = [
         [width / 2 - currentWidth / 2, topY],
@@ -48,7 +66,7 @@ const FunnelChart = ({ data, width = 400, height = 500 }) => {
         .style("fill", "white")
         .style("font-size", "14px");
     });
-  }, [data, width, height]);
+  }, [data, width, height, title]);
 
   return <svg ref={ref}></svg>;
 };
