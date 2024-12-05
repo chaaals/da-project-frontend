@@ -149,7 +149,7 @@ const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
               className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={onSelect}
             >
-              <option value={0}>Select X Axis</option>
+              <option value={0}>Select Category</option>
               {options.map((opt, i) => (
                 <option key={`${opt.label}-${i}`} value={opt.label}>
                   {opt.label}
@@ -170,12 +170,17 @@ const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
               className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={onSelect}
             >
-              <option value={undefined}>Select Y Axis</option>
-              {options.map((opt, i) => (
-                <option key={`${opt.label}-${i}`} value={opt.label}>
-                  {opt.label}
-                </option>
-              ))}
+              <option value={undefined}>Select Column 1</option>
+              {options
+                .filter(
+                  ({ column_type }) =>
+                    column_type === "NUMBER" || column_type === "BOOLEAN"
+                )
+                .map((opt, i) => (
+                  <option key={`${opt.label}-${i}`} value={opt.label}>
+                    {opt.label}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -192,34 +197,17 @@ const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
               className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={onSelect}
             >
-              <option value={undefined}>Select Bubble Radius</option>
-              {options.map((opt, i) => (
-                <option key={`${opt.label}-${i}`} value={opt.label}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="col3"
-              className="block mb-2 text-sm font-medium text-textPrimary"
-            >
-              Column 3
-            </label>
-            <select
-              id="col3"
-              name="col3"
-              className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              onChange={onSelect}
-            >
-              <option value={undefined}>Select Bubble Radius</option>
-              {options.map((opt, i) => (
-                <option key={`${opt.label}-${i}`} value={opt.label}>
-                  {opt.label}
-                </option>
-              ))}
+              <option value={undefined}>Select Column 2</option>
+              {options
+                .filter(
+                  ({ column_type }) =>
+                    column_type === "NUMBER" || column_type === "BOOLEAN"
+                )
+                .map((opt, i) => (
+                  <option key={`${opt.label}-${i}`} value={opt.label}>
+                    {opt.label}
+                  </option>
+                ))}
             </select>
           </div>
         </section>

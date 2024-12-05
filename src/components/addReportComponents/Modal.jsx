@@ -37,7 +37,6 @@ const CHART_DATA_TEMPLATE = {
     category: undefined,
     col1: undefined,
     col2: undefined,
-    col3: undefined,
   },
 };
 

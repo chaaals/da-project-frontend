@@ -5,19 +5,17 @@ import PieChart from "../components/PieChart";
 import ScatterPlot from "../components/ScatterPlot";
 import StackedBarChart from "../components/StackedBar";
 
-const aggregateStackedBarData = (cat, col1, col2, col3) => {
+const aggregateStackedBarData = (cat, col1, col2) => {
   const { rows: catData } = cat;
   const { label: col1Label, rows: col1Data } = col1;
   const { label: col2Label, rows: col2Data } = col2;
-  const { label: col3Label, rows: col3Data } = col3;
 
   const data = catData.map((cat, idx) => ({
     category: cat,
     [col1Label]: col1Data[idx],
     [col2Label]: col2Data[idx],
-    [col3Label]: col3Data[idx],
   }));
-  const keys = [col1Label, col2Label, col3Label];
+  const keys = [col1Label, col2Label];
 
   return { data, keys };
 };
@@ -145,15 +143,14 @@ const generateChart = (selectedChart, chartData) => {
     }
 
     case "stackedbar": {
-      const { title, category, col1, col2, col3 } = chartData;
-      if (!category || !col1 || !col2 || !col3) return null;
+      const { title, category, col1, col2 } = chartData;
+      if (!category || !col1 || !col2) return null;
 
       const [cat] = category;
       const [_col1] = col1;
       const [_col2] = col2;
-      const [_col3] = col3;
 
-      const { data, keys } = aggregateStackedBarData(cat, _col1, _col2, _col3);
+      const { data, keys } = aggregateStackedBarData(cat, _col1, _col2);
 
       return <StackedBarChart title={title} data={data} keys={keys} />;
     }
