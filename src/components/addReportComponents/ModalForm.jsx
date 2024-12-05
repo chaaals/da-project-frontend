@@ -56,7 +56,7 @@ const CARTESIAN_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
           className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           onChange={onSelect}
         >
-          <option value={undefined}>Select Y Axis</option>
+          <option value={0}>Select Y Axis</option>
           {options.map((opt, i) => (
             <option key={`${opt.label}-${i}`} value={opt.label}>
               {opt.label}
@@ -78,7 +78,7 @@ const CARTESIAN_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
             className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             onChange={onSelect}
           >
-            <option value={undefined}>Select Bubble Radius</option>
+            <option value={0}>Select Bubble Radius</option>
             {options.map((opt, i) => (
               <option key={`${opt.label}-${i}`} value={opt.label}>
                 {opt.label}
@@ -101,10 +101,13 @@ const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
 
   const onSelect = (event) => {
     const { name, value } = event.target;
-
+    console.log({ value });
     setChartData((prev) => ({
       ...prev,
-      [name]: columns.filter((col) => col.label === value),
+      [name]:
+        value !== "0"
+          ? columns.filter((col) => col.label === value)
+          : undefined,
     }));
   };
 
@@ -125,7 +128,7 @@ const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
               className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={onSelect}
             >
-              <option>Select Data Source</option>
+              <option value={0}>Select Data Source</option>
               {options.map((opt, i) => (
                 <option key={`${opt.label}-${i}`} value={opt.label}>
                   {opt.label}
@@ -170,7 +173,7 @@ const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
               className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={onSelect}
             >
-              <option value={undefined}>Select Column 1</option>
+              <option value={0}>Select Column 1</option>
               {options
                 .filter(
                   ({ column_type }) =>
@@ -197,7 +200,7 @@ const CATEGORICAL_DATA_INPUT = ({ columns, selectedChart, setChartData }) => {
               className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={onSelect}
             >
-              <option value={undefined}>Select Column 2</option>
+              <option value={0}>Select Column 2</option>
               {options
                 .filter(
                   ({ column_type }) =>
