@@ -2,7 +2,7 @@ const Table = ({ tableData }) => {
   const [headers, ...data] = tableData;
 
   return (
-    <div className="max-h-96 relative overflow-x-auto shadow-md">
+    <div className="w-full max-h-96 relative overflow-x-auto shadow-md">
       <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-textPrimary uppercase bg-gray-50">
           <tr>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 const BubbleChart = ({
@@ -7,27 +7,55 @@ const BubbleChart = ({
   xLabel = "x",
   yLabel = "y",
   rLabel = "r",
-  width = 600,
-  height = 400,
   padding = 40,
 }) => {
   const svgRef = useRef();
+  const [containerSize, setContainerSize] = useState({
+    width: 600,
+    height: 400,
+  });
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove();
+    // Dynamically update container size
+    const updateSize = () => {
+      if (svgRef.current && svgRef.current.parentElement) {
+        const { width, height } =
+          svgRef.current.parentElement.getBoundingClientRect();
+        setContainerSize({
+          width: Math.max(width, 300), // Minimum width
+          height: Math.max(height, 300), // Minimum height
+        });
+      }
+    };
+
+    updateSize(); // Initial size calculation
+    window.addEventListener("resize", updateSize);
+
+    return () => window.removeEventListener("resize", updateSize); // Cleanup
+  }, []);
+
+  useEffect(() => {
+    const { width, height } = containerSize;
+    const svg = d3
+      .select(svgRef.current)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYMid meet");
+
+    svg.selectAll("*").remove(); // Clear previous content
 
     const xScale = d3
       .scaleLinear()
-      .domain(d3.extent(data, (d) => d.x))
+      .domain(d3.extent(data, (d) => +d.x))
       .range([padding, width - padding]);
 
     const yScale = d3
       .scaleLinear()
-      .domain(d3.extent(data, (d) => d.y))
+      .domain(d3.extent(data, (d) => +d.y))
       .range([height - padding, padding]);
 
-    const maxValue = d3.max(data, (d) => d.r);
+    const maxValue = d3.max(data, (d) => +d.r);
     const sizeScale = d3
       .scaleSqrt()
       .domain([0, maxValue])
@@ -47,21 +75,22 @@ const BubbleChart = ({
 
     svg.append("g").attr("transform", `translate(${padding}, 0)`).call(yAxis);
 
+    // Bubbles
     svg
       .selectAll("circle")
       .data(data)
       .join("circle")
-      .attr("cx", (d) => xScale(d.x))
-      .attr("cy", (d) => yScale(d.y))
-      .attr("r", (d) => sizeScale(d.r))
-      .attr("fill", (d) => colorScale(d.r))
+      .attr("cx", (d) => xScale(+d.x))
+      .attr("cy", (d) => yScale(+d.y))
+      .attr("r", (d) => sizeScale(+d.r))
+      .attr("fill", (d) => colorScale(+d.r))
       .attr("opacity", 0.7)
       .append("title")
-      .text((d) => `${rLabel}: ${d.r}`);
+      .text((d) => `${rLabel}: ${+d.r}`);
 
+    // Title
     svg
       .append("text")
-      .attr("class", "title")
       .attr("x", width / 2)
       .attr("y", 20)
       .attr("text-anchor", "middle")
@@ -69,33 +98,27 @@ const BubbleChart = ({
       .attr("font-weight", "bold")
       .text(title);
 
+    // X-axis Label
     svg
       .append("text")
-      .attr("class", "x-label")
       .attr("x", width / 2)
       .attr("y", height - 5)
       .attr("text-anchor", "middle")
       .style("font-size", "12px")
       .text(xLabel);
 
-    svg
-      .append("g")
-      .attr("class", "y-axis")
-      .attr("transform", `translate(40, 0)`)
-      .call(d3.axisLeft(yScale));
-
+    // Y-axis Label
     svg
       .append("text")
-      .attr("class", "y-label")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", 8)
+      .attr("y", 15)
       .attr("text-anchor", "middle")
       .style("font-size", "12px")
       .text(yLabel);
-  }, [data, width, xLabel, yLabel, rLabel, title, height, padding]);
+  }, [data, containerSize, title, xLabel, yLabel, rLabel, padding]);
 
-  return <svg ref={svgRef} width={width} height={height} />;
+  return <svg ref={svgRef} style={{ width: "100%", height: "100%" }}></svg>;
 };
 
 export default BubbleChart;

@@ -1,10 +1,12 @@
 import { parse } from "papaparse";
 import { useEffect, useState } from "react";
 
-const useTable = (csvUpload) => {
+const useTable = ({ csvUpload, columns }) => {
   const [tableData, setTableData] = useState([]);
 
   const parseFetchedTable = (columns) => {
+    if (!columns) return;
+
     const table = columns.reduce((table, column) => {
       const { label, rows } = column;
 
@@ -35,7 +37,11 @@ const useTable = (csvUpload) => {
         complete: (results) => setTableData(results.data),
       });
     }
-  }, [csvUpload]);
+
+    if (columns) {
+      parseFetchedTable(columns);
+    }
+  }, [csvUpload, columns]);
 
   return { tableData, parseFetchedTable };
 };

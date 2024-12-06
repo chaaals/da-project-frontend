@@ -1,18 +1,40 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
-const PieChart = ({ data, width = 300, height = 300, title = "Pie Chart" }) => {
+const PieChart = ({ data, title = "Pie Chart" }) => {
   const ref = useRef();
+  const [containerSize, setContainerSize] = useState({
+    width: 300,
+    height: 300,
+  });
+
+  // Dynamically calculate parent container size on every render
+  useEffect(() => {
+    const updateSize = () => {
+      if (ref.current && ref.current.parentElement) {
+        const { width, height } =
+          ref.current.parentElement.getBoundingClientRect();
+        setContainerSize({
+          width: Math.max(width, 200), // Minimum width of 200px
+          height: Math.max(height, 200), // Minimum height of 200px
+        });
+      }
+    };
+
+    updateSize(); // Initial size calculation
+
+    // Attach resize event listener for window resize
+    window.addEventListener("resize", updateSize);
+
+    return () => window.removeEventListener("resize", updateSize); // Cleanup
+  }, []);
 
   useEffect(() => {
-    const radius = Math.min(width, height) / 2;
+    const { width, height } = containerSize;
+    const radius = Math.min(width, height) / 2 - 30; // Padding adjustment
 
-    d3.select(ref.current).selectAll("*").remove();
-
-    const svg = d3
-      .select(ref.current)
-      .attr("width", width)
-      .attr("height", height + 30);
+    const svg = d3.select(ref.current);
+    svg.selectAll("*").remove(); // Clear previous drawings
 
     svg
       .append("text")
@@ -25,7 +47,7 @@ const PieChart = ({ data, width = 300, height = 300, title = "Pie Chart" }) => {
 
     const chartGroup = svg
       .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2 + 30})`);
+      .attr("transform", `translate(${width / 2}, ${height / 2 + 20})`);
 
     const pie = d3.pie().value((d) => d.value);
     const arc = d3.arc().innerRadius(0).outerRadius(radius);
@@ -51,9 +73,16 @@ const PieChart = ({ data, width = 300, height = 300, title = "Pie Chart" }) => {
       .attr("text-anchor", "middle")
       .attr("font-size", "12px")
       .text((d) => d.data.label);
-  }, [data, width, height, title]);
+  }, [data, containerSize, title]);
 
-  return <svg ref={ref}></svg>;
+  return (
+    <svg
+      ref={ref}
+      style={{ width: "100%", height: "100%" }}
+      viewBox={`0 0 ${containerSize.width} ${containerSize.height}`}
+      preserveAspectRatio="xMidYMid meet"
+    ></svg>
+  );
 };
 
 export default PieChart;
