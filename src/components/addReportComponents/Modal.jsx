@@ -56,7 +56,9 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
       refetch();
       toggleModal();
     },
-    onError: () => {},
+    onError: (error) => {
+      console.error("Oops, something went wrong.", error);
+    },
   });
 
   const onSelectChart = (chart) => {
