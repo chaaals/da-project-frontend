@@ -5,6 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import Modal from "../components/addReportComponents/Modal";
 import { getReport } from "../queries/report";
 import Spinner from "../components/Spinner";
+import { getPages } from "../queries/page";
+import useChart from "../hooks/useChart";
 
 const Header = ({ report }) => {
   const { name } = report;
@@ -76,19 +78,33 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
 };
 
 const ReportPage = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [tabs, setTabs] = useState([]);
+  const [activeTab, setActiveTab] = useState("Overview");
+
   const { reportId } = useParams();
   const {
-    isLoading,
-    isFetching,
+    isLoading: isReportLoading,
+    isFetching: isReportFetching,
     data: report,
   } = useQuery({
     queryKey: ["report"],
     queryFn: () => getReport(reportId),
   });
 
-  const [showModal, setShowModal] = useState(false);
-  const [tabs, setTabs] = useState([]);
-  const [activeTab, setActiveTab] = useState("Overview");
+  const {
+    isLoading: isPagesLoading,
+    isFetching: isPagesFetching,
+    data: reportPages,
+    refetch: refetchPages,
+  } = useQuery({
+    queryKey: ["reportPages"],
+    queryFn: () => getPages(reportId),
+  });
+
+  const { getCharts } = useChart({ selectedChart: "", chartData: {} });
+
+  const charts = getCharts(reportPages);
 
   const handleAddTab = () => {
     setShowModal(true);
@@ -99,14 +115,14 @@ const ReportPage = () => {
   };
 
   useEffect(() => {
-    if (!isLoading && !isFetching && report) {
+    if (!isReportLoading && !isReportFetching && report) {
       setTabs([{ id: "Overview", content: report.overview }]);
     }
-  }, [isFetching, isLoading, report]);
+  }, [isReportFetching, isReportLoading, report]);
 
   return (
     <section className="flex flex-col min-h-screen bg-transparent">
-      {isLoading ? (
+      {isReportLoading ? (
         <div className="flex items-center justify-center h-[75dvh]">
           <Spinner />
         </div>
@@ -119,8 +135,15 @@ const ReportPage = () => {
             setActiveTab={setActiveTab}
             onAddTab={handleAddTab}
           />
+
+          <section className="grid grid-cols-1 gap-4 p-6 desktop:grid-cols-3"></section>
+
           {showModal && (
-            <Modal report={report} toggleModal={handleModalClose} />
+            <Modal
+              report={report}
+              refetch={refetchPages}
+              toggleModal={handleModalClose}
+            />
           )}
         </>
       )}

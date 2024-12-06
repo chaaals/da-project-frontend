@@ -42,7 +42,7 @@ const CHART_DATA_TEMPLATE = {
   },
 };
 
-const Modal = ({ report, toggleModal }) => {
+const Modal = ({ report, toggleModal, refetch }) => {
   const [selectedChart, setSelectedChart] = useState(null);
   const [chartData, setChartData] = useState({});
 
@@ -62,7 +62,10 @@ const Modal = ({ report, toggleModal }) => {
 
   const { mutate: addReportPage, isPending: isAdding } = useMutation({
     mutationFn: postPage,
-    onSuccess: () => {},
+    onSuccess: () => {
+      refetch();
+      toggleModal();
+    },
     onError: () => {},
   });
 
@@ -141,7 +144,7 @@ const Modal = ({ report, toggleModal }) => {
         <div className="flex justify-end mt-4">
           <button
             onClick={onAddReportPage}
-            className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="w-32 flex items-center justify-center text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             {isAdding && <Spinner />}
             {!isAdding && <span>Add Report</span>}

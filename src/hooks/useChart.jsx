@@ -5,7 +5,7 @@ import PieChart from "../components/PieChart";
 import ScatterPlot from "../components/ScatterPlot";
 import StackedBarChart from "../components/StackedBar";
 
-const chartEnums = {
+export const chartEnums = {
   scatter: "SCATTER_PLOT",
   pie: "PIE_CHART",
   bubble: "BUBBLE_CHART",
@@ -66,7 +66,7 @@ const generateFrequencyTable = (rows) => {
   return table;
 };
 
-const generateChart = (selectedChart, chartData) => {
+const generateChart = (selectedChart, chartData, chartName) => {
   switch (selectedChart) {
     case chartEnums.scatter:
     case "scatter": {
@@ -83,7 +83,7 @@ const generateChart = (selectedChart, chartData) => {
 
       return (
         <ScatterPlot
-          title={title}
+          title={chartName ?? title}
           data={data}
           xLabel={xLabel}
           yLabel={yLabel}
@@ -106,7 +106,7 @@ const generateChart = (selectedChart, chartData) => {
         return { label: `${label}\n(${percent.toFixed(2)}%)`, value };
       });
 
-      return <PieChart title={title} data={pieData} />;
+      return <PieChart title={chartName ?? title} data={pieData} />;
     }
     case chartEnums.bubble:
     case "bubble": {
@@ -125,7 +125,7 @@ const generateChart = (selectedChart, chartData) => {
 
       return (
         <BubbleChart
-          title={title}
+          title={chartName ?? title}
           data={bubbleData}
           xLabel={xLabel}
           yLabel={yLabel}
@@ -148,7 +148,7 @@ const generateChart = (selectedChart, chartData) => {
         return { label, value };
       });
 
-      return <FunnelChart title={title} data={funnelData} />;
+      return <FunnelChart title={chartName ?? title} data={funnelData} />;
     }
     case chartEnums.stackedbar:
     case "stackedbar": {
@@ -161,14 +161,16 @@ const generateChart = (selectedChart, chartData) => {
 
       const { data, keys } = aggregateStackedBarData(cat, _col1, _col2);
 
-      return <StackedBarChart title={title} data={data} keys={keys} />;
+      return (
+        <StackedBarChart title={chartName ?? title} data={data} keys={keys} />
+      );
     }
     default:
       return null;
   }
 };
 
-const useChart = ({ selectedChart, chartData }) => {
+const useChart = ({ selectedChart = "", chartData = {} }) => {
   const [chart, setChart] = useState(null);
 
   const getLabels = (chartData) => {
@@ -197,6 +199,16 @@ const useChart = ({ selectedChart, chartData }) => {
     }
   };
 
+  const getCharts = (charts) => {
+    if (!charts) {
+      return null;
+    }
+
+    return charts.map(({ chart_type, chartData, name }) => ({
+      [chart_type]: generateChart(chart_type, chartData, name),
+    }));
+  };
+
   useEffect(() => {
     if (selectedChart) {
       const _chart = generateChart(selectedChart, chartData);
@@ -205,7 +217,7 @@ const useChart = ({ selectedChart, chartData }) => {
     }
   }, [selectedChart, chartData]);
 
-  return { chart, chartEnums, getLabels };
+  return { chart, chartEnums, getCharts, getLabels };
 };
 
 export default useChart;
