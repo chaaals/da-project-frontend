@@ -25,7 +25,9 @@ function Home() {
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
 
-  const { tableData, parseFetchedTable } = useTable(selectedFile);
+  const { tableData, parseFetchedTable } = useTable({
+    csvUpload: selectedFile,
+  });
 
   const { isFetching, isLoading, data } = useQuery({
     queryKey: ["reports"],

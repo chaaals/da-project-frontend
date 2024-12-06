@@ -41,12 +41,12 @@ const ScatterPlot = ({
 
     const xScale = d3
       .scaleLinear()
-      .domain([0, d3.max(data, (d) => d.x)])
+      .domain([0, d3.max(data, (d) => +d.x)])
       .range([0, innerWidth]);
 
     const yScale = d3
       .scaleLinear()
-      .domain([0, d3.max(data, (d) => d.y)])
+      .domain([0, d3.max(data, (d) => +d.y)])
       .range([innerHeight, 0]);
 
     const chart = svg
@@ -58,8 +58,8 @@ const ScatterPlot = ({
       .selectAll("circle")
       .data(data)
       .join("circle")
-      .attr("cx", (d) => xScale(d.x))
-      .attr("cy", (d) => yScale(d.y))
+      .attr("cx", (d) => xScale(+d.x))
+      .attr("cy", (d) => yScale(+d.y))
       .attr("r", 5)
       .attr("fill", "teal");
 

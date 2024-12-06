@@ -7,6 +7,9 @@ import { getReport } from "../queries/report";
 import Spinner from "../components/Spinner";
 import { getPages } from "../queries/page";
 import useChart from "../hooks/useChart";
+import { getColumns } from "../queries/column";
+import useTable from "../hooks/useTable";
+import Table from "../components/Table";
 
 const Header = ({ report }) => {
   const { name } = report;
@@ -27,11 +30,10 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
 
   return (
     <div className="text-sm font-medium text-center text-gray-500 dark:text-gray-400 dark:border-gray-700">
-      <ul className="flex flex-wrap -mb-px">
+      <ul className="flex flex-wrap -mb-px overflow-x-auto">
         {tabs.map((tab) => (
           <li key={tab.id} className="me-2">
-            <a
-              href="#"
+            <button
               className={`inline-block p-4 border-b-2 ${
                 activeTab === tab.id
                   ? "border-blue-600 text-blue-600"
@@ -39,8 +41,8 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
               } rounded-t-lg text-lg`}
               onClick={() => handleTabClick(tab.id)}
             >
-              {tab.id}
-            </a>
+              {tab.name}
+            </button>
           </li>
         ))}
         <li className="me-2">
@@ -62,12 +64,23 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
           (tab) =>
             activeTab === tab.id && (
               <div key={tab.id}>
-                {tab.id === "Overview" ? (
+                {tab.id === 0 ? (
                   <div className="flex flex-col items-center bg-[#1F2A37] rounded-lg shadow-md p-8">
                     <p>{tab.content}</p>
                   </div>
                 ) : (
-                  tab.content
+                  <>
+                    <section className="flex flex-col items-center bg-[#1F2A37] rounded-lg shadow-md p-8">
+                      <p>{tab.overview}</p>
+                    </section>
+                    <section className="flex items-center w-full mt-4 gap-2">
+                      <div className="flex items-center justify-center w-[33.33%] shadow bg-white p-2 rounded-lg">
+                        {tab.content}
+                      </div>
+
+                      <div className="text-white">Remarks...</div>
+                    </section>
+                  </>
                 )}
               </div>
             )
@@ -80,7 +93,7 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
 const ReportPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [tabs, setTabs] = useState([]);
-  const [activeTab, setActiveTab] = useState("Overview");
+  const [activeTab, setActiveTab] = useState(0);
 
   const { reportId } = useParams();
   const {
@@ -93,6 +106,15 @@ const ReportPage = () => {
   });
 
   const {
+    isLoading: isColumnsLoading,
+    isFetching: isColumnsFetching,
+    data: columns,
+  } = useQuery({
+    queryKey: ["columns"],
+    queryFn: () => getColumns(reportId),
+  });
+
+  const {
     isLoading: isPagesLoading,
     isFetching: isPagesFetching,
     data: reportPages,
@@ -102,6 +124,7 @@ const ReportPage = () => {
     queryFn: () => getPages(reportId),
   });
 
+  const { tableData } = useTable({ columns });
   const { getCharts } = useChart({ selectedChart: "", chartData: {} });
 
   const charts = getCharts(reportPages);
@@ -115,13 +138,22 @@ const ReportPage = () => {
   };
 
   useEffect(() => {
-    if (!isReportLoading && !isReportFetching && report) {
-      setTabs([{ id: "Overview", content: report.overview }]);
+    if (!isPagesLoading && !isPagesFetching && report) {
+      setTabs([
+        { id: 0, name: "Overview", content: report.overview },
+        ...charts.map(({ name, overview, chart }, idx) => ({
+          id: idx + 1,
+          overview,
+          name,
+          content: chart,
+        })),
+      ]);
     }
-  }, [isReportFetching, isReportLoading, report]);
+  }, [isPagesFetching, isPagesLoading, report]);
 
+  console.log({ reportPages });
   return (
-    <section className="flex flex-col min-h-screen bg-transparent">
+    <section className="flex flex-col min-h-screen bg-transparent p-8">
       {isReportLoading ? (
         <div className="flex items-center justify-center h-[75dvh]">
           <Spinner />
@@ -129,6 +161,7 @@ const ReportPage = () => {
       ) : (
         <>
           <Header report={report} />
+
           <Tabs
             tabs={tabs}
             activeTab={activeTab}
@@ -136,10 +169,18 @@ const ReportPage = () => {
             onAddTab={handleAddTab}
           />
 
-          <section className="grid grid-cols-1 gap-4 p-6 desktop:grid-cols-3"></section>
+          {activeTab === 0 && (
+            <section className="flex items-center justify-center p-6">
+              {(isColumnsLoading || isColumnsFetching) &&
+                tableData.length === 0 && <Spinner />}
+              {(!isColumnsFetching || !isColumnsLoading) &&
+                tableData.length > 0 && <Table tableData={tableData} />}
+            </section>
+          )}
 
-          {showModal && (
+          {columns && showModal && (
             <Modal
+              columns={columns}
               report={report}
               refetch={refetchPages}
               toggleModal={handleModalClose}

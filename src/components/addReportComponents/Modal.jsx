@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import ModalHeader from "./ModalHeader";
 import ModalForm from "./ModalForm";
@@ -7,7 +7,6 @@ import Preview from "./Preview";
 import Spinner from "../Spinner";
 
 import { rules } from "./rules";
-import { getColumns } from "../../queries/column";
 import { postPage } from "../../queries/page";
 
 import useChart from "../../hooks/useChart";
@@ -42,22 +41,13 @@ const CHART_DATA_TEMPLATE = {
   },
 };
 
-const Modal = ({ report, toggleModal, refetch }) => {
+const Modal = ({ report, columns, toggleModal, refetch }) => {
   const [selectedChart, setSelectedChart] = useState(null);
   const [chartData, setChartData] = useState({});
 
   const { chart, chartEnums, getLabels } = useChart({
     selectedChart,
     chartData,
-  });
-
-  const {
-    isLoading,
-    isFetching,
-    data: columns,
-  } = useQuery({
-    queryKey: ["columns"],
-    queryFn: () => getColumns(report.id),
   });
 
   const { mutate: addReportPage, isPending: isAdding } = useMutation({
@@ -102,42 +92,32 @@ const Modal = ({ report, toggleModal, refetch }) => {
       <div className="relative p-6 w-full max-w-4xl max-h-[90vh] overflow-auto bg-gray-800 rounded-lg shadow-lg dark:bg-gray-900">
         <ModalHeader toggleModal={toggleModal} />
 
-        {(isLoading || isFetching) && (
-          <section className="w-full h-32 flex items-center justify-center">
-            <Spinner />
-          </section>
-        )}
-
-        {!isLoading && !isFetching && (
-          <>
-            <div className="grid grid-cols-5 gap-4 my-6 px-2">
-              {buttons.map((button, index) => (
-                <button
-                  key={index}
-                  onClick={() => onSelectChart(button.type)}
-                  className={`flex flex-col items-center justify-center p-4 text-white rounded-lg shadow-md focus:ring-2 focus:ring-blue-500 ${
-                    selectedChart === button.type
-                      ? "bg-gray-700 hover:bg-gray-600"
-                      : "bg-gray-600 hover:bg-gray-700"
-                  }`}
-                >
-                  <img
-                    src={chartIcons[button.type]}
-                    alt={`${button.label} Icon`}
-                    className="size-6 mb-2"
-                  />
-                  <span className="text-textPrimary">{button.label}</span>
-                </button>
-              ))}
-            </div>
-            <ModalForm
-              columns={columns}
-              selectedChart={selectedChart}
-              chartData={chartData}
-              setChartData={setChartData}
-            />
-          </>
-        )}
+        <div className="grid grid-cols-5 gap-4 my-6 px-2">
+          {buttons.map((button, index) => (
+            <button
+              key={index}
+              onClick={() => onSelectChart(button.type)}
+              className={`flex flex-col items-center justify-center p-4 text-white rounded-lg shadow-md focus:ring-2 focus:ring-blue-500 ${
+                selectedChart === button.type
+                  ? "bg-gray-700 hover:bg-gray-600"
+                  : "bg-gray-600 hover:bg-gray-700"
+              }`}
+            >
+              <img
+                src={chartIcons[button.type]}
+                alt={`${button.label} Icon`}
+                className="size-6 mb-2"
+              />
+              <span className="text-textPrimary">{button.label}</span>
+            </button>
+          ))}
+        </div>
+        <ModalForm
+          columns={columns}
+          selectedChart={selectedChart}
+          chartData={chartData}
+          setChartData={setChartData}
+        />
 
         {chart && <Preview>{chart}</Preview>}
 

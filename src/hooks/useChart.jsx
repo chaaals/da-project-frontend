@@ -204,9 +204,13 @@ const useChart = ({ selectedChart = "", chartData = {} }) => {
       return null;
     }
 
-    return charts.map(({ chart_type, chartData, name }) => ({
-      [chart_type]: generateChart(chart_type, chartData, name),
-    }));
+    return charts.map(({ chart_type, chartData, name, overview }) => {
+      return {
+        name,
+        overview,
+        chart: generateChart(chart_type, chartData, name),
+      };
+    });
   };
 
   useEffect(() => {
