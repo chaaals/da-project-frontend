@@ -204,8 +204,9 @@ const useChart = ({ selectedChart = "", chartData = {} }) => {
       return null;
     }
 
-    return charts.map(({ chart_type, chartData, name, overview }) => {
+    return charts.map(({ id, chart_type, chartData, name, overview }) => {
       return {
+        id,
         name,
         overview,
         chart: generateChart(chart_type, chartData, name),

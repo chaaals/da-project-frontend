@@ -10,6 +10,7 @@ import useChart from "../hooks/useChart";
 import { getColumns } from "../queries/column";
 import useTable from "../hooks/useTable";
 import Table from "../components/Table";
+import CommentSection from "../components/CommentSection";
 
 const Header = ({ report }) => {
   const { name } = report;
@@ -38,7 +39,7 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
                 activeTab === tab.id
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300"
-              } rounded-t-lg text-lg`}
+              } rounded-t-lg text-md`}
               onClick={() => handleTabClick(tab.id)}
             >
               {tab.name}
@@ -58,34 +59,6 @@ const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
           </button>
         </li>
       </ul>
-      {/* Display Content based on Active Tab */}
-      <div className="p-4 mt-4">
-        {tabs.map(
-          (tab) =>
-            activeTab === tab.id && (
-              <div key={tab.id}>
-                {tab.id === 0 ? (
-                  <div className="flex flex-col items-center bg-[#1F2A37] rounded-lg shadow-md p-8">
-                    <p>{tab.content}</p>
-                  </div>
-                ) : (
-                  <>
-                    <section className="flex flex-col items-center bg-[#1F2A37] rounded-lg shadow-md p-8">
-                      <p>{tab.overview}</p>
-                    </section>
-                    <section className="flex items-center w-full mt-4 gap-2">
-                      <div className="flex items-center justify-center w-[33.33%] shadow bg-white p-2 rounded-lg">
-                        {tab.content}
-                      </div>
-
-                      <div className="text-white">Remarks...</div>
-                    </section>
-                  </>
-                )}
-              </div>
-            )
-        )}
-      </div>
     </div>
   );
 };
@@ -96,11 +69,7 @@ const ReportPage = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   const { reportId } = useParams();
-  const {
-    isLoading: isReportLoading,
-    isFetching: isReportFetching,
-    data: report,
-  } = useQuery({
+  const { isLoading: isReportLoading, data: report } = useQuery({
     queryKey: ["report"],
     queryFn: () => getReport(reportId),
   });
@@ -141,8 +110,8 @@ const ReportPage = () => {
     if (!isPagesLoading && !isPagesFetching && report) {
       setTabs([
         { id: 0, name: "Overview", content: report.overview },
-        ...charts.map(({ name, overview, chart }, idx) => ({
-          id: idx + 1,
+        ...charts.map(({ id, name, overview, chart }) => ({
+          id,
           overview,
           name,
           content: chart,
@@ -151,7 +120,6 @@ const ReportPage = () => {
     }
   }, [isPagesFetching, isPagesLoading, report]);
 
-  console.log({ reportPages });
   return (
     <section className="flex flex-col min-h-screen bg-transparent p-8">
       {isReportLoading ? (
@@ -168,6 +136,53 @@ const ReportPage = () => {
             setActiveTab={setActiveTab}
             onAddTab={handleAddTab}
           />
+
+          <div className="p-4 text-sm font-medium text-gray-500 dark:text-gray-400 dark:border-gray-700">
+            {tabs.map(
+              (tab) =>
+                activeTab === tab.id && (
+                  <div key={tab.id}>
+                    {tab.id === 0 ? (
+                      <div className="flex items-start bg-[#1F2A37] rounded-lg shadow-md p-8 gap-4 text-wrap breawords">
+                        <img
+                          src="/images/logo.svg"
+                          alt="PowerBytes Logo"
+                          className="mt-1 size-5"
+                        />
+                        <p>{tab.content}</p>
+                      </div>
+                    ) : (
+                      <>
+                        <section className="flex items-start bg-[#1F2A37] rounded-lg shadow-md p-8 gap-4 text-wrap break-words">
+                          <img
+                            src="/images/logo.svg"
+                            alt="PowerBytes Logo"
+                            className="mt-1 size-5"
+                          />
+                          <p>{tab.overview}</p>
+                        </section>
+                        <section className="flex flex-col w-full items-center mt-8 gap-2">
+                          <div className="flex items-center justify-center w-full shadow bg-white p-2 rounded-lg desktop:w-[35%]">
+                            {tab.content}
+                          </div>
+                          <hr className="w-full mt-4 border-[#1F2A37] desktop:w-[33.33%]" />
+                        </section>
+                      </>
+                    )}
+                  </div>
+                )
+            )}
+          </div>
+
+          {activeTab > 0 && (
+            <section className="flex">
+              <CommentSection
+                activeTab={activeTab}
+                reportId={report.id}
+                pageId={tabs.filter(({ id }) => id === activeTab)[0].id}
+              />
+            </section>
+          )}
 
           {activeTab === 0 && (
             <section className="flex items-center justify-center p-6">
