@@ -23,7 +23,10 @@ export const getPages = async (reportId) => {
 
     const pages = await Promise.all(
       res.map(async (page) => {
-        const chartData = await getChartData(reportId, page.labels);
+        const encodedLabels = page.labels.map((label) =>
+          encodeURIComponent(label)
+        );
+        const chartData = await getChartData(reportId, encodedLabels);
 
         if (page.chart_type === chartEnums.scatter) {
           const [x, y] = page.labels;
