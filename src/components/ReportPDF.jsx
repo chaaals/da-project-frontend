@@ -18,10 +18,8 @@ const ReportPDF = ({ header, data }) => {
               throw new Error(`Element with ID "${name}" not found`);
 
             const svg = svgElement.outerHTML;
-            console.log({ svg });
             const pngDataUri = await makeSvgDataUri(svg);
 
-            console.log({ pngDataUri });
             return { id, name, overview, pngDataUri };
           } catch (error) {
             console.error(error);

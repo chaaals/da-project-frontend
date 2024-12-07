@@ -6,13 +6,15 @@ import { useQuery } from "@tanstack/react-query";
 import Modal from "../components/addReportComponents/Modal";
 import { getReport } from "../queries/report";
 import Spinner from "../components/Spinner";
-import { getPages } from "../queries/page";
-import useChart from "../hooks/useChart";
-import { getColumns } from "../queries/column";
-import useTable from "../hooks/useTable";
 import Table from "../components/Table";
 import CommentSection from "../components/CommentSection";
 import ReportPDF from "../components/ReportPDF";
+
+import { getColumns } from "../queries/column";
+import { getPages } from "../queries/page";
+
+import useChart from "../hooks/useChart";
+import useTable from "../hooks/useTable";
 
 const Header = ({ report, charts }) => {
   const { name, overview } = report;
@@ -29,17 +31,9 @@ const Header = ({ report, charts }) => {
       <div className="text-white text-4xl font-semibold">{name}</div>
       {reportPdf !== null && (
         <PDFDownloadLink document={reportPdf} fileName="report.pdf">
-          {({ loading }) =>
-            loading ? (
-              <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
-                Loading document...
-              </button>
-            ) : (
-              <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
-                Download Reports
-              </button>
-            )
-          }
+          <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
+            Download Report
+          </button>
         </PDFDownloadLink>
       )}
     </section>
@@ -165,14 +159,30 @@ const ReportPage = () => {
                 activeTab === tab.id && (
                   <div key={tab.id}>
                     {tab.id === 0 ? (
-                      <div className="flex items-start bg-[#1F2A37] rounded-lg shadow-md p-8 gap-4 text-wrap breawords">
-                        <img
-                          src="/images/logo.svg"
-                          alt="PowerBytes Logo"
-                          className="mt-1 size-5"
-                        />
-                        <p>{tab.content}</p>
-                      </div>
+                      <>
+                        <div className="flex items-start bg-[#1F2A37] rounded-lg shadow-md p-8 gap-4 text-wrap breawords">
+                          <img
+                            src="/images/logo.svg"
+                            alt="PowerBytes Logo"
+                            className="mt-1 size-5"
+                          />
+                          <p>{tab.content}</p>
+                        </div>
+                        <>
+                          {charts && charts?.length > 0 && (
+                            <div className="w-full flex items-center justify-center flex-wrap gap-4 mt-4">
+                              {charts.map(({ chart }, i) => (
+                                <div
+                                  key={i}
+                                  className="bg-white rounded-xl max-w-lg"
+                                >
+                                  <div className="w-full">{chart}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      </>
                     ) : (
                       <>
                         <section className="flex items-start bg-[#1F2A37] rounded-lg shadow-md p-8 gap-4 text-wrap break-words">
@@ -224,12 +234,6 @@ const ReportPage = () => {
               refetch={refetchPages}
               toggleModal={handleModalClose}
             />
-          )}
-
-          {charts && charts?.length > 0 && (
-            <div className="absolute invisible w-[40%] -z-10">
-              {charts.map(({ chart }) => chart)}
-            </div>
           )}
         </>
       )}
