@@ -77,7 +77,9 @@ const PieChart = ({ data, title = "Pie Chart" }) => {
 
   return (
     <svg
+      id={title}
       ref={ref}
+      xmlns="http://www.w3.org/2000/svg"
       style={{ width: "100%", height: "100%" }}
       viewBox={`0 0 ${containerSize.width} ${containerSize.height}`}
       preserveAspectRatio="xMidYMid meet"

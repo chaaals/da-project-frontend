@@ -91,7 +91,14 @@ const FunnelChart = ({ data, title = "Funnel Chart" }) => {
     });
   }, [data, containerSize, title]);
 
-  return <svg ref={ref} style={{ width: "100%", height: "100%" }}></svg>;
+  return (
+    <svg
+      id={title}
+      xmlns="http://www.w3.org/2000/svg"
+      ref={ref}
+      style={{ width: "100%", height: "100%" }}
+    ></svg>
+  );
 };
 
 export default FunnelChart;

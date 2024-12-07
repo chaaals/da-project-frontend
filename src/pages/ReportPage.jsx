@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useQuery } from "@tanstack/react-query";
 
 import Modal from "../components/addReportComponents/Modal";
@@ -11,15 +12,36 @@ import { getColumns } from "../queries/column";
 import useTable from "../hooks/useTable";
 import Table from "../components/Table";
 import CommentSection from "../components/CommentSection";
+import ReportPDF from "../components/ReportPDF";
 
-const Header = ({ report }) => {
-  const { name } = report;
+const Header = ({ report, charts }) => {
+  const { name, overview } = report;
+  const [reportPdf, setReportPdf] = useState(null);
+
+  useEffect(() => {
+    if (report && charts) {
+      setReportPdf(<ReportPDF header={overview} data={charts} />);
+    }
+  }, [report, overview, charts]);
+
   return (
     <section className="flex justify-between items-center p-2 bg-transparent">
       <div className="text-white text-4xl font-semibold">{name}</div>
-      <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
-        Download Reports
-      </button>
+      {reportPdf !== null && (
+        <PDFDownloadLink document={reportPdf} fileName="report.pdf">
+          {({ loading }) =>
+            loading ? (
+              <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
+                Loading document...
+              </button>
+            ) : (
+              <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
+                Download Reports
+              </button>
+            )
+          }
+        </PDFDownloadLink>
+      )}
     </section>
   );
 };
@@ -128,7 +150,7 @@ const ReportPage = () => {
         </div>
       ) : (
         <>
-          <Header report={report} />
+          <Header report={report} charts={charts} />
 
           <Tabs
             tabs={tabs}
@@ -161,11 +183,13 @@ const ReportPage = () => {
                           />
                           <p>{tab.overview}</p>
                         </section>
-                        <section className="flex flex-col w-full items-center mt-8 gap-2">
-                          <div className="flex items-center justify-center w-full shadow bg-white p-2 rounded-lg desktop:w-[35%]">
-                            {tab.content}
-                          </div>
-                          <hr className="w-full mt-4 border-[#1F2A37] desktop:w-[33.33%]" />
+                        <section className="flex items-center justify-center w-full">
+                          <section className="flex flex-col max-w-2xl items-center mt-8 gap-2">
+                            <div className="flex items-center justify-center w-full shadow bg-white p-2 rounded-lg">
+                              {tab.content}
+                            </div>
+                            <hr className="w-full mt-4 border-[#1F2A37] desktop:w-[33.33%]" />
+                          </section>
                         </section>
                       </>
                     )}
@@ -200,6 +224,12 @@ const ReportPage = () => {
               refetch={refetchPages}
               toggleModal={handleModalClose}
             />
+          )}
+
+          {charts && charts?.length > 0 && (
+            <div className="absolute invisible w-[40%] -z-10">
+              {charts.map(({ chart }) => chart)}
+            </div>
           )}
         </>
       )}

@@ -21,6 +21,8 @@ const StackedBarChart = ({ data, keys, title = "Stacked Bar Chart" }) => {
 
     const svg = container
       .append("svg")
+      .attr("id", title)
+      .attr("xmlns", "http://www.w3.org/2000/svg")
       .attr("width", width)
       .attr("height", height)
       .append("g")
