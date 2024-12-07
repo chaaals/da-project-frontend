@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getComments, postComment } from "../queries/comment";
 import Spinner from "./Spinner";
 
-const CommentSection = ({ activeTab, reportId, pageId }) => {
+const CommentSection = ({ activeTab, reportId, pageId, refetchPages }) => {
   const [comment, setComment] = useState("");
   const {
     data: comments,
@@ -19,6 +19,7 @@ const CommentSection = ({ activeTab, reportId, pageId }) => {
     onSuccess: () => {
       setComment("");
       refetchComments();
+      refetchPages();
     },
     onError: (error) => {
       console.error("Oops, something went wrong.", error);

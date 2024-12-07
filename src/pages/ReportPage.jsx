@@ -16,21 +16,24 @@ import { getPages } from "../queries/page";
 import useChart from "../hooks/useChart";
 import useTable from "../hooks/useTable";
 
-const Header = ({ report, charts }) => {
-  const { name, overview } = report;
+const Header = ({ activeTab, report, charts }) => {
+  const { name } = report;
   const [reportPdf, setReportPdf] = useState(null);
 
   useEffect(() => {
     if (report && charts) {
-      setReportPdf(<ReportPDF header={overview} data={charts} />);
+      setReportPdf(<ReportPDF report={report} data={charts} />);
     }
-  }, [report, overview, charts]);
+  }, [report, charts]);
 
   return (
     <section className="flex justify-between items-center p-2 bg-transparent">
       <div className="text-white text-4xl font-semibold">{name}</div>
-      {reportPdf !== null && (
-        <PDFDownloadLink document={reportPdf} fileName="report.pdf">
+      {activeTab === 0 && reportPdf !== null && (
+        <PDFDownloadLink
+          document={reportPdf}
+          fileName={`${report.name} report.pdf`}
+        >
           <button className="bg-transparent text-white border-2 border-blue-700 px-4 py-2 rounded-lg hover:bg-blue-700 hover:text-white">
             Download Report
           </button>
@@ -144,7 +147,7 @@ const ReportPage = () => {
         </div>
       ) : (
         <>
-          <Header report={report} charts={charts} />
+          <Header activeTab={activeTab} report={report} charts={charts} />
 
           <Tabs
             tabs={tabs}
@@ -214,6 +217,7 @@ const ReportPage = () => {
                 activeTab={activeTab}
                 reportId={report.id}
                 pageId={tabs.filter(({ id }) => id === activeTab)[0].id}
+                refetchPages={refetchPages}
               />
             </section>
           )}
