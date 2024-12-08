@@ -64,8 +64,8 @@ const ReportPDF = ({ report, data }) => {
               throw new Error(`Element with ID "${name}" not found`);
 
             const svg = svgElement.outerHTML;
-            let width = +svgElement.getAttribute("width");
-            let height = +svgElement.getAttribute("height");
+            const width = +svgElement.getAttribute("width");
+            const height = +svgElement.getAttribute("height");
 
             const pngDataUri = await makeSvgDataUri(svg, { width, height });
             const comments = await getComments(reportId, pageId);
