@@ -151,13 +151,13 @@ function Home() {
           <header className="w-full bg-colorSecondary rounded-xl text-textPrimary flex h-12">
             <Button
               onClick={handleButtonClick}
-              style="rounded-xl grid-cols-1 justify-items-center text-textSecondary bg-[#4B5563] py-2 px-12"
+              style="rounded-xl flex place-items-center text-textSecondary bg-[#4B5563] py-2 px-4 tablet:px-7 desktop:px-12 max-w-52"
             >
-              <span className="font-inter text-textPrimary font-bold text-base">
+              <span className="font-inter text-textPrimary font-bold text-xs tablet:text-sm desktop:text-base text-nowrap">
                 Choose a File
               </span>
             </Button>
-            <span className="font-inter italic text-xl text-[#979A9F] ml-7 my-auto">
+            <span className="font-inter italic text-[#979A9F] mx-4 truncate desktop:mx-7 my-auto text-sm tablet:text-base desktop:text-xl text-nowrap">
               {selectedFile.name}
             </span>
           </header>
@@ -178,18 +178,18 @@ function Home() {
               >
                 {isCleaning && <Spinner />}
                 {!isCleaning && (
-                  <span className="font-inter text-white">Clean Data</span>
+                  <span className="font-inter text-white text-nowrap">Clean Data</span>
                 )}
               </Button>
             )}
             {step === 2 && (
               <Button
                 onClick={onAddReport}
-                style="w-32 bg-colorButton h-12 rounded-lg px-4"
+                style="w-34 bg-colorButton h-12 rounded-lg px-4"
               >
                 {isCreating && <Spinner />}
                 {!isCreating && (
-                  <span className="font-inter text-white">Create Report</span>
+                  <span className="font-inter text-white text-nowrap">Create Report</span>
                 )}
               </Button>
             )}
