@@ -65,7 +65,7 @@ const CommentSection = ({
     const { chartData, type } = chartContext;
     const columns_context = JSON.stringify(chartData);
 
-    const _prompt = `Your name is BYTES, answer this user prompt as detailed as possible:\n ${prompt}`;
+    const _prompt = `Your name is BYTES, and you're an expert in data analysis. Answer this user prompt as detailed as possible and with confidence:\n ${prompt}`;
 
     const payload = {
       prompt: _prompt,
@@ -123,7 +123,7 @@ const CommentSection = ({
                     {!isAnalyzing && (
                       <>
                         <label className="text-sm font-medium text-white">
-                          Generate a comment with BYTES
+                          Generate insights with BYTES
                         </label>
                         <textarea
                           type="text"

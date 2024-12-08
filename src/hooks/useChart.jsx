@@ -162,7 +162,12 @@ const generateChart = (selectedChart, chartData, chartName) => {
       const { data, keys } = aggregateStackedBarData(cat, _col1, _col2);
 
       return (
-        <StackedBarChart title={chartName ?? title} data={data} keys={keys} />
+        <StackedBarChart
+          xLabel={cat.label}
+          title={chartName ?? title}
+          data={data}
+          keys={keys}
+        />
       );
     }
     default:

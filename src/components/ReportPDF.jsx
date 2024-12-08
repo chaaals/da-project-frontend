@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 11,
     textAlign: "justify",
-    marginBottom: 6,
+    marginBottom: 8,
   },
   imageContainer: {
     display: "flex",
@@ -59,6 +59,7 @@ const ReportPDF = ({ report, data }) => {
 
           try {
             const svgElement = document.getElementById(name);
+
             if (!svgElement)
               throw new Error(`Element with ID "${name}" not found`);
 

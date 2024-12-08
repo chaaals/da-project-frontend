@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
-const StackedBarChart = ({ data, keys, title = "Stacked Bar Chart" }) => {
+const StackedBarChart = ({
+  data,
+  keys,
+  xLabel = "x",
+  title = "Stacked Bar Chart",
+}) => {
   const chartRef = useRef();
   const [containerSize, setContainerSize] = useState({
     width: 600,
@@ -20,9 +25,6 @@ const StackedBarChart = ({ data, keys, title = "Stacked Bar Chart" }) => {
     if (innerWidth <= 0 || innerHeight <= 0 || !data || !keys) return;
 
     const svg = container
-      .append("svg")
-      .attr("id", title)
-      .attr("xmlns", "http://www.w3.org/2000/svg")
       .attr("width", width)
       .attr("height", height)
       .append("g")
@@ -74,11 +76,19 @@ const StackedBarChart = ({ data, keys, title = "Stacked Bar Chart" }) => {
     svg
       .append("text")
       .attr("x", innerWidth / 2)
-      .attr("y", -20)
+      .attr("y", -35)
       .attr("text-anchor", "middle")
-      .attr("font-size", "20px")
+      .attr("font-size", "16px")
       .attr("font-weight", "bold")
       .text(title);
+
+    svg
+      .append("text")
+      .attr("x", innerWidth / 2)
+      .attr("y", height - 70)
+      .attr("text-anchor", "middle")
+      .style("font-size", "12px")
+      .text(xLabel);
 
     const legend = svg
       .append("g")
@@ -87,7 +97,7 @@ const StackedBarChart = ({ data, keys, title = "Stacked Bar Chart" }) => {
     keys.forEach((key, i) => {
       const legendItem = legend
         .append("g")
-        .attr("transform", `translate(${i * 120}, 0)`);
+        .attr("transform", `translate(${i * 100}, 0)`);
 
       legendItem
         .append("rect")
@@ -100,6 +110,7 @@ const StackedBarChart = ({ data, keys, title = "Stacked Bar Chart" }) => {
         .attr("x", 30)
         .attr("y", 15)
         .attr("alignment-baseline", "middle")
+        .style("font-size", "10px")
         .text(key);
     });
   };
@@ -120,15 +131,12 @@ const StackedBarChart = ({ data, keys, title = "Stacked Bar Chart" }) => {
   }, []);
 
   return (
-    <div
+    <svg
+      id={title}
+      xmlns="http://www.w3.org/2000/svg"
       ref={chartRef}
-      style={{
-        width: "100%",
-        height: "100%",
-        position: "relative",
-        display: "flex",
-      }}
-    />
+      style={{ width: "100%", height: "100%", position: "relative" }}
+    ></svg>
   );
 };
 
