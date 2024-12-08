@@ -98,7 +98,7 @@ const CommentSection = ({
           <Spinner />
         </section>
       ) : (
-        <div className="max-w-2xl mx-auto px-4">
+        <section className="max-w-2xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg lg:text-2xl font-bold text-white">
               Discussion ({comments.length})
@@ -206,7 +206,7 @@ const CommentSection = ({
                 </article>
               );
             })}
-        </div>
+        </section>
       )}
     </section>
   );

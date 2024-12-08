@@ -15,6 +15,8 @@ export default {
         'colorPrimary': '#111928',
         'colorSecondary': '#2D3646',
         'colorButton': '#1A56DB',
+        'activeTab': '#A798FF',
+        'bgActiveTab': '#151D2B',
         'tableHeader': '#374151',
         'tableData': '#1F2A37',
         'textPrimary': '#CBCBCB',
