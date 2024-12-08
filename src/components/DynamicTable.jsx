@@ -34,8 +34,13 @@ const DynamicTable = ({
 
   return (
     <>
-      <section className="w-full overflow-auto">
-        <table className="min-w-[1200px] w-full border-collapse table-fixed text-center text-textPrimary">
+      <section className={`${
+          data.length === 0
+            ? "hidden"
+            : "w-full overflow-auto"
+        }`}
+      >
+        <table className="min-w-[600px] w-full border-collapse table-fixed text-center text-textPrimary">
           <thead>
             <tr className="font-inter font-bold">
               {columns.map((column, index) => (

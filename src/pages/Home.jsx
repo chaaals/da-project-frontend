@@ -86,16 +86,16 @@ function Home() {
   };
 
   return (
-    <section className="flex-col space-y-7 py-16 px-24 w-full">
-      <header className="flex gap-3 text-textPrimary">
-        <img src="./images/search.svg" alt="Search Icon" className="size-9" />
-        <h1 className="text-textPrimary text-3xl font-inter font-bold">
+    <section className="flex-col space-y-7 py-16 px-10 tablet:px-16 desktop:px-24 w-full">
+      <header className="flex gap-3 text-textPrimary place-items-center">
+        <img src="./images/search.svg" alt="Search Icon" className="size-7 desktop:size-9" />
+        <h1 className="text-textPrimary text-lg desktop:text-3xl font-inter font-bold">
           Instant Reports with PowerBytes!
         </h1>
       </header>
-      <p className="text-textPrimary text-justify">
+      <p className="text-textPrimary text-justify font-inter text-sm desktop:text-base">
         <strong>PowerBytes</strong> is an easy-to-use web and mobile app that
-        lets you upload CSV or XLS files, generate interactive charts, and
+        lets you upload CSV, generate interactive charts, and
         visualize your data in minutes. With Bytes, our AI assistant, you can
         ask questions about your data and get intelligent insights instantly.
         Once you’re done, download your reports to share and present your
@@ -107,7 +107,7 @@ function Home() {
         <>
           <Button
             onClick={handleButtonClick}
-            style="w-full bg-colorSecondary rounded-xl h-64 text-textSecondary p-4 flex flex-col justify-center place-items-center"
+            style="w-full bg-colorSecondary rounded-xl h-64 text-textSecondary py-4 px-8 flex flex-col justify-center place-items-center"
           >
             <div className="grid-cols-1">
               <img
@@ -120,25 +120,31 @@ function Home() {
               </span>
             </div>
           </Button>
-          <div className="h-1 bg-colorSecondary"></div>
-          <section className="flex-col space-y-7 w-full mt-16">
-            <header className="flex gap-3 text-textPrimary">
-              <img
-                src="./images/history.svg"
-                alt="History Icon"
-                className="size-9"
-              />
-              <h1 className="text-textPrimary text-3xl font-inter font-bold">
-                History
-              </h1>
-            </header>
-            <div className="h-fit bg-colorSecondary rounded-xl py-6">
-              {(isLoading || isFetching) && <Spinner />}
-              {!isLoading && !isFetching && (
-                <DynamicTable columns={reportColumns} data={data} />
-              )}
-            </div>
-          </section>
+          {data && data.length > 0 ? (
+            <>
+              <div className="h-1 bg-colorSecondary"></div>
+              <section className="flex-col space-y-7 w-full mt-16">
+                <header className="flex gap-3 text-textPrimary place-items-center">
+                  <img src="./images/history.svg" alt="History Icon" className="size-7 desktop:size-9" />
+                  <h1 className="text-textPrimary text-lg desktop:text-3xl font-inter font-bold">
+                    History
+                  </h1>
+                </header>
+                <div className="h-fit bg-colorSecondary rounded-xl py-6">
+                  {(isLoading || isFetching) && <Spinner />}
+                  {!isLoading && !isFetching && 
+                      <DynamicTable
+                        columns={reportColumns}
+                        data={data.slice(-5).reverse()}
+                        isPaginationHidden={true}
+                      />
+                  }
+                </div>
+              </section> 
+              </>) : (
+              <div></div>
+            )
+          }
         </>
       ) : (
         <section className="flex-col space-y-9">
