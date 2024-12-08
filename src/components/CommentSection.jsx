@@ -2,9 +2,19 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getComments, postComment } from "../queries/comment";
 import Spinner from "./Spinner";
+import { postGemini } from "../queries/gemini";
 
-const CommentSection = ({ activeTab, reportId, pageId, refetchPages }) => {
+const CommentSection = ({
+  activeTab,
+  charts,
+  reportId,
+  pageId,
+  refetchPages,
+}) => {
   const [comment, setComment] = useState("");
+  const [prompt, setPrompt] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
   const {
     data: comments,
     isLoading: isCommentsLoading,
@@ -26,6 +36,18 @@ const CommentSection = ({ activeTab, reportId, pageId, refetchPages }) => {
     },
   });
 
+  const { mutate: promptGemini, isPending: isAnalyzing } = useMutation({
+    mutationFn: postGemini,
+    onSuccess: (data) => {
+      setComment(data);
+      setIsOpen(false);
+      setPrompt("");
+    },
+    onError: (error) => {
+      console.error("Oops, something went wrong.", error);
+    },
+  });
+
   const handleInput = (e) => {
     const { value } = e.target;
     setComment(value);
@@ -37,9 +59,31 @@ const CommentSection = ({ activeTab, reportId, pageId, refetchPages }) => {
     addComment({ reportId, pageId, payload });
   };
 
+  const onPromptGemini = () => {
+    const [chartContext] = charts.filter(({ id }) => activeTab === id);
+
+    const { chartData, type } = chartContext;
+    const columns_context = JSON.stringify(chartData);
+
+    const _prompt = `Your name is BYTES, answer this user prompt as detailed as possible:\n ${prompt}`;
+
+    const payload = {
+      prompt: _prompt,
+      context: JSON.stringify({
+        columns: columns_context,
+        chart_type: type,
+      }),
+    };
+
+    promptGemini(payload);
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      onPostComment(e);
+      const { id } = e.target;
+
+      if (id === "comment") onPostComment(e);
+      if (id === "bytes") onPromptGemini(e);
     }
   };
 
@@ -59,6 +103,59 @@ const CommentSection = ({ activeTab, reportId, pageId, refetchPages }) => {
             <h2 className="text-lg lg:text-2xl font-bold text-white">
               Discussion ({comments.length})
             </h2>
+
+            <div className="relative">
+              <button
+                title="Generate notes with BYTES"
+                onClick={() => setIsOpen((prev) => !prev)}
+                className="flex items-center gap-2 bg-transparent text-white rounded-full"
+              >
+                <img
+                  src="/images/logo.svg"
+                  alt="PowerBytes Logo"
+                  className="motion-safe:animate-bounce mt-1 size-6"
+                />
+              </button>
+
+              {isOpen && (
+                <div className="absolute top-8 right-0 bg-[#1F2A37] shadow-lg p-4 rounded-lg w-64">
+                  <div className="flex flex-col gap-2">
+                    {!isAnalyzing && (
+                      <>
+                        <label className="text-sm font-medium text-white">
+                          Generate a comment with BYTES
+                        </label>
+                        <textarea
+                          type="text"
+                          id="bytes"
+                          rows={3}
+                          value={prompt}
+                          onChange={(e) => setPrompt(e.target.value)}
+                          onKeyDown={handleKeyPress}
+                          className="bg-gray-700 border border-gray-600 text-textPrimary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          placeholder="How can I help?"
+                        ></textarea>
+                        <button
+                          onClick={onPromptGemini}
+                          className="text-sm bg-colorButton w-full text-white rounded-lg py-2"
+                        >
+                          Generate
+                        </button>
+                      </>
+                    )}
+
+                    {isAnalyzing && (
+                      <div className="flex flex-col items-center justify-center">
+                        <Spinner />
+                        <span className="text-white">
+                          Generating comment...
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <form className="mb-6" onSubmit={onPostComment}>
             <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">

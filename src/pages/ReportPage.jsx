@@ -214,6 +214,7 @@ const ReportPage = () => {
           {activeTab > 0 && (
             <section className="flex">
               <CommentSection
+                charts={charts}
                 activeTab={activeTab}
                 reportId={report.id}
                 pageId={tabs.filter(({ id }) => id === activeTab)[0].id}
