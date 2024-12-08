@@ -212,6 +212,7 @@ const useChart = ({ selectedChart = "", chartData = {} }) => {
         name,
         overview,
         chart,
+        chartData,
         type: chart_type,
       };
     });
