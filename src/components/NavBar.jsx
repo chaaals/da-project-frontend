@@ -1,21 +1,16 @@
-import React, { useContext, useState, useEffect } from "react";
-import AppContext from "../context/app";
+import React, { useState, useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+
 import Button from "./Button";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
-  const {
-    selectedFile,
-    fileInputRef,
-    handleButtonClick,
-    handleFileChange,
-    removeFile,
-  } = useContext(AppContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,40 +33,68 @@ const NavBar = () => {
           <span className="self-center text-xl font-semibold whitespace-nowrap text-white">PowerBytes</span>
         </a>
         <section className="flex space-x-2 tablet:space-x-4 desktop:space-x-7">
-          <a href="/" className="text-white hover:bg-[#1B1F25] rounded-md px-4 py-2 hidden desktop:block"> Home </a>
-          <a href="/history" className="text-white hover:bg-[#1B1F25] rounded-md px-4 py-2 hidden desktop:block" > History </a>
-          <button type="button" onClick={toggleMenu}
-            className="items-center size-10 justify-center text-gray-400 rounded-lg flex desktop:hidden">
+          <NavLink
+              to="/"
+              className={`rounded-md px-4 py-2 hidden desktop:block ${
+                location.pathname === "/"
+                  ? "text-white"
+                  : "text-textPrimary"
+              }`}
+            >Home
+          </NavLink>
+          <NavLink
+              to="/history"
+              className={`rounded-md px-4 py-2 hidden desktop:block ${
+                location.pathname === "/history"
+                  ? "text-white"
+                  : "text-textPrimary"
+              }`}
+            >History
+          </NavLink>
+          <Button onClick={toggleMenu}
+            style="items-center size-10 text-gray-400 rounded-lg flex desktop:hidden">
             <span className="sr-only">Open main menu</span>   
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
-            >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
-            </svg>
-          </button>
+            {isMenuOpen ? (
+                <img
+                  src="/images/close.svg"
+                  alt="Close menu"
+                  className="min-w-6 min-h-6 size-6"
+                />
+              ) : (
+                <img
+                  src="/images/burger.svg"
+                  alt="Close menu"
+                  className="min-w-6 min-h-6 size-6"
+                />
+              )}
+          </Button>
         </section>
       </section>
       <section className={`${isMenuOpen ? "block" : "hidden"} desktop:hidden block w-full`}>
         <ul className="flex flex-col font-medium py-4 bg-tableData">
           <li>
-            <a href="/" className="block py-2 px-4 rounded text-white bg-blue-700 hover:bg-blue-800" >
+            <NavLink
+              to="/"
+              className={`block py-2 px-4 rounded ${
+                location.pathname === "/"
+                  ? "bg-gray-700 text-white"
+                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+              }`}
+            >
               Home
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a href="/history" className="block py-2 px-4 rounded text-gray-300 hover:bg-gray-700 hover:text-white">
+            <NavLink
+              to="/history"
+              className={`block py-2 px-4 rounded ${
+                location.pathname === "/history"
+                  ? "bg-gray-700 text-white"
+                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+              }`}
+            >
               History
-            </a>
+            </NavLink>
           </li>
         </ul>
       </section>
