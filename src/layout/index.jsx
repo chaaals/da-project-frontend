@@ -4,8 +4,8 @@ import Footer from "../components/Footer";
 
 const Layout = () => {
   return (
-    <main className="h-screen w-full bg-colorPrimary overflow-auto">
-      <NavBar /> 
+    <main className="w-full bg-colorPrimary">
+      <NavBar />
       <Outlet />
       <Footer />
     </main>

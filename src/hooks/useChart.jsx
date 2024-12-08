@@ -205,11 +205,14 @@ const useChart = ({ selectedChart = "", chartData = {} }) => {
     }
 
     return charts.map(({ id, chart_type, chartData, name, overview }) => {
+      const chart = generateChart(chart_type, chartData, name);
+
       return {
         id,
         name,
         overview,
-        chart: generateChart(chart_type, chartData, name),
+        chart,
+        type: chart_type,
       };
     });
   };
