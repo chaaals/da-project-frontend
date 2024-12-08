@@ -82,7 +82,7 @@ const ReportPage = () => {
   
     return (
       <section className="flex justify-between items-center p-2 bg-transparent">
-        <div className="text-white text-lg tablet:text-2xl desktop:text-4xl font-inter font-semibold">{name}</div>
+        <div className="text-white text-base tablet:text-xl desktop:text-4xl font-inter font-semibold">{name}</div>
         {activeTab === 0 && reportPdf !== null && (
           <div className="relative inline-block text-left">
             <Button onClick={toggleDropdown} >
@@ -119,7 +119,7 @@ const ReportPage = () => {
     };
   
     return (
-      <div className="text-sm font-medium text-center text-gray-500 dark:text-gray-400 dark:border-gray-700 mt-3">
+      <div className="text-sm font-medium text-center text-gray-500 mt-3">
         <ul className="flex -mb-px overflow-x-auto place-items-center">
           {tabs.map((tab) => (
             <li key={tab.id}>
@@ -127,8 +127,8 @@ const ReportPage = () => {
                 className={`inline-block p-4 border-b-2 ${
                   activeTab === tab.id
                     ? "border-activeTab text-activeTab bg-bgActiveTab"
-                    : "border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300"
-                } text-md`}
+                    : "border-[#212836] text-gray-500 hover:text-gray-400 hover:border-gray-400"
+                } text-md font-inter`}
                 onClick={() => handleTabClick(tab.id)}
               >
                 {tab.name}
@@ -183,7 +183,7 @@ const ReportPage = () => {
             onAddTab={handleAddTab}
           />
 
-          <div className="py-4 text-sm font-medium text-gray-500 dark:text-gray-400 dark:border-gray-700">
+          <div className="py-4 text-sm font-medium text-gray-500">
             {tabs.map(
               (tab) =>
                 activeTab === tab.id && (
@@ -196,7 +196,7 @@ const ReportPage = () => {
                             alt="PowerBytes Logo"
                             className="mt-1 size-5"
                           />
-                          <p className="text-justify">{tab.content}</p>
+                          <p className="text-justify text-xs desktop:text-sm font-inter">{tab.content}</p>
                         </div>
                         <>
                           {charts && charts?.length > 0 && (
@@ -251,7 +251,7 @@ const ReportPage = () => {
           )}
 
           {activeTab === 0 && (
-            <section className="flex items-center justify-center">
+            <section className="flex items-center justify-center  ">
               {(isColumnsLoading || isColumnsFetching) &&
                 tableData.length === 0 && <Spinner />}
               {(!isColumnsFetching || !isColumnsLoading) &&
