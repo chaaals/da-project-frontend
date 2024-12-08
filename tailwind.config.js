@@ -4,7 +4,7 @@ export default {
   theme: {
     screens: {
       'phone': '320px',
-      'tablet': '480px',
+      'tablet': '600px',
       'desktop': '770px',
     },
     fontFamily: {

@@ -84,15 +84,16 @@ const ReportPage = () => {
       <section className="flex justify-between items-center p-2 bg-transparent">
         <div className="text-white text-base tablet:text-xl desktop:text-4xl font-inter font-semibold">{name}</div>
         {activeTab === 0 && reportPdf !== null && (
-          <div className="relative inline-block text-left">
-            <Button onClick={toggleDropdown} >
-              <img src="/images/kebab.svg" alt="Options" className="min-w-6 min-h-6 size-6" />
+          <div className="relative hidden desktop:inline-block text-left">
+            <Button onClick={toggleDropdown} style="font-inter flex gap-2 text-white bg-colorButton rounded-lg px-4 py-2 place-items-center text-nowrap text-sm">
+              Download Report
+              <img src="/images/arrow-down.svg" alt="Options" className="min-w-4 min-h-4 size-4" />
             </Button>
             {isOpen && (
               <section className="absolute right-0 mt-2 w-fit bg-colorSecondary rounded-md shadow-lg z-50 p-2 flex flex-col place-items-end gap-2">
                 <input 
                   type="text" 
-                  className="w-40 rounded-lg bg-colorPrimary text-white text-sm" 
+                  className="w-40 rounded-lg bg-colorPrimary text-white text-sm font-inter" 
                   placeholder="File Name" 
                   value={fileName}
                   onChange={handleFileNameChange}>
@@ -101,8 +102,8 @@ const ReportPage = () => {
                   document={reportPdf}
                   fileName={`${fileName}.pdf`}
                 >
-                  <button className="bg-colorButton text-white px-4 py-2 rounded-lg w-40">
-                    Download Report
+                  <button className="bg-colorButton text-white px-4 py-2 rounded-lg w-40 font-inter">
+                    Download
                   </button>
                 </PDFDownloadLink>
               </section>
