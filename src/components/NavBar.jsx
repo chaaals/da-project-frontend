@@ -28,10 +28,10 @@ const NavBar = () => {
   return (
     <nav className={`${isMenuOpen ? "pb-0" : "pb-6"} bg-tableData p-6 flex-col w-full`}>
       <section className="flex justify-between">
-        <a href="/" className="flex items-center space-x-2">
+        <NavLink to="/" className="flex items-center space-x-2">
           <img src="/images/logo.svg" alt="PowerBytes Logo" className="size-10"/>
           <span className="self-center text-xl font-semibold whitespace-nowrap text-white">PowerBytes</span>
-        </a>
+        </NavLink>
         <section className="flex space-x-2 tablet:space-x-4 desktop:space-x-7">
           <NavLink
               to="/"
