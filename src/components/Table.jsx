@@ -29,7 +29,7 @@ const Table = ({ tableData }) => {
                     <td
                       key={`${data}-${j}`}
                       scope="row"
-                      className="bg-tableData border-b border-tableHeader p-3 font-medium text-textSecondary whitespace-nowrap"
+                      className="bg-tableData font-inter border-b border-tableHeader p-3 font-medium text-textSecondary whitespace-nowrap"
                     >
                       {data}
                     </td>
