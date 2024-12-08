@@ -86,7 +86,7 @@ function Home() {
   };
 
   return (
-    <section className="flex-col space-y-7 py-16 px-10 tablet:px-16 desktop:px-24 w-full">
+    <section className="flex-col space-y-7 py-8 tablet:py-12 desktop:py-16 px-10 tablet:px-16 desktop:px-24 w-full">
       <header className="flex gap-3 text-textPrimary place-items-center">
         <img src="./images/search.svg" alt="Search Icon" className="size-7 desktop:size-9" />
         <h1 className="text-textPrimary text-lg desktop:text-3xl font-inter font-bold">
