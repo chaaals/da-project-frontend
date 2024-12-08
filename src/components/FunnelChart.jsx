@@ -53,7 +53,7 @@ const FunnelChart = ({ data, title = "Funnel Chart" }) => {
       .attr("text-anchor", "middle")
       .attr("dominant-baseline", "middle")
       .text(title)
-      .style("font-size", "20px")
+      .style("font-size", "16px")
       .style("font-weight", "bold");
 
     data.forEach((d, i) => {
