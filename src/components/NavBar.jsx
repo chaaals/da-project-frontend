@@ -19,47 +19,30 @@ const NavBar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 770) { // Assuming 1024px as the breakpoint for desktop
-        setIsMenuOpen(false); // Close menu on desktop
+      if (window.innerWidth >= 770) {
+        setIsMenuOpen(false);
       }
     };
-
-    // Initial check
     handleResize();
-
-    // Event listener for window resize
     window.addEventListener("resize", handleResize);
-
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
-    <nav className={`${isMenuOpen ? "pb-0" : "pb-6"} bg-[#1F2A37] p-6 flex-col w-full`}>
+    <nav className={`${isMenuOpen ? "pb-0" : "pb-6"} bg-tableData p-6 flex-col w-full`}>
       <section className="flex justify-between">
         <a href="/" className="flex items-center space-x-2">
           <img src="/images/logo.svg" alt="PowerBytes Logo" className="size-10"/>
           <span className="self-center text-xl font-semibold whitespace-nowrap text-white">PowerBytes</span>
         </a>
-        <section className="flex space-x-7">
+        <section className="flex space-x-2 tablet:space-x-4 desktop:space-x-7">
           <a href="/" className="text-white hover:bg-[#1B1F25] rounded-md px-4 py-2 hidden desktop:block"> Home </a>
           <a href="/history" className="text-white hover:bg-[#1B1F25] rounded-md px-4 py-2 hidden desktop:block" > History </a>
-          <Button onClick={handleButtonClick} style="text-white bg-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-nowrap">
-            Upload CSV
-          </Button>
-          <input
-            type="file"
-            accept=".csv"
-            ref={fileInputRef}
-            className="hidden"
-            onChange={handleFileChange}
-          />
           <button type="button" onClick={toggleMenu}
-            className="items-center p-2 w-10 h-10 justify-end text-sm text-gray-400 rounded-lg block desktop:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"  
-            >
-          <span className="sr-only">Open main menu</span>   
+            className="items-center size-10 justify-center text-gray-400 rounded-lg flex desktop:hidden">
+            <span className="sr-only">Open main menu</span>   
             <svg
               className="w-5 h-5"
               aria-hidden="true"
@@ -67,19 +50,19 @@ const NavBar = () => {
               fill="none"
               viewBox="0 0 17 14"
             >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M1 1h15M1 7h15M1 13h15"
+            />
             </svg>
           </button>
         </section>
       </section>
       <section className={`${isMenuOpen ? "block" : "hidden"} desktop:hidden block w-full`}>
-        <ul className="flex flex-col font-medium py-4 bg-[#1F2A37]">
+        <ul className="flex flex-col font-medium py-4 bg-tableData">
           <li>
             <a href="/" className="block py-2 px-4 rounded text-white bg-blue-700 hover:bg-blue-800" >
               Home
