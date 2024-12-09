@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { getComments, postComment } from "../queries/comment";
 import Spinner from "./Spinner";
 import { postGemini } from "../queries/gemini";
@@ -30,8 +31,10 @@ const CommentSection = ({
       setComment("");
       refetchComments();
       refetchPages();
+      toast.success("Successfully posted a comment.");
     },
     onError: (error) => {
+      toast.error("Oops, something went wrong.");
       console.error("Oops, something went wrong.", error);
     },
   });
@@ -44,6 +47,7 @@ const CommentSection = ({
       setPrompt("");
     },
     onError: (error) => {
+      toast.error("Oops, something went wrong.");
       console.error("Oops, something went wrong.", error);
     },
   });

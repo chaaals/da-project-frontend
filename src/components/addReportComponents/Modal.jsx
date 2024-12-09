@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import ModalHeader from "./ModalHeader";
 import ModalForm from "./ModalForm";
@@ -55,8 +56,10 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
     onSuccess: () => {
       refetch();
       toggleModal();
+      toast.success("Successfully created a report page.");
     },
     onError: (error) => {
+      toast.error("Oops, something went wrong.");
       console.error("Oops, something went wrong.", error);
     },
   });
@@ -72,7 +75,12 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
   const onAddReportPage = () => {
     const { title } = chartData;
 
-    if (!chart || !title) return;
+    if (!chart || !title) {
+      toast.error(
+        "Title or chart data cannot be undefined when creating a report."
+      );
+      return;
+    }
 
     const reportId = report.id;
     const data = {
@@ -94,7 +102,7 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
       <div className="relative p-6 w-full max-w-4xl max-h-[90vh] overflow-auto bg-gray-800 rounded-lg shadow-lg dark:bg-gray-900">
         <ModalHeader toggleModal={toggleModal} />
 
-        <div className="grid grid-cols-5 gap-4 my-6 px-2">
+        <div className="grid grid-cols-1 gap-4 my-6 px-2 desktop:grid-cols-5">
           {buttons.map((button, index) => (
             <button
               key={index}

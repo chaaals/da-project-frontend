@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import AppContext from "../context/app";
@@ -17,6 +18,7 @@ import useTable from "../hooks/useTable";
 function Home() {
   const {
     selectedFile,
+    setSelectedFile,
     fileInputRef,
     handleButtonClick,
     handleFileChange,
@@ -41,11 +43,12 @@ function Home() {
   } = useMutation({
     mutationFn: postCSV,
     onSuccess: (data) => {
-      console.log("Data has been cleaned");
       parseFetchedTable(data);
       setStep(2);
+      toast.success("CSV data has been cleaned!");
     },
     onError: (error) => {
+      toast.error("Oops, something went wrong.");
       console.error("Oops, something went wrong.", error);
     },
   });
@@ -55,8 +58,11 @@ function Home() {
     onSuccess: (data) => {
       const { report } = data;
       navigate(`/report/${report.id}`);
+      setSelectedFile(null);
+      toast.success("Successfully created a report.");
     },
     onError: (error) => {
+      toast.error("Oops, something went wrong.");
       console.error("Oops, something went wrong.", error);
     },
   });
@@ -88,19 +94,23 @@ function Home() {
   return (
     <section className="flex-col space-y-7 py-8 tablet:py-12 desktop:py-16 px-10 tablet:px-16 desktop:px-24 w-full">
       <header className="flex gap-3 text-textPrimary place-items-center">
-        <img src="./images/search.svg" alt="Search Icon" className="size-7 desktop:size-9" />
+        <img
+          src="./images/search.svg"
+          alt="Search Icon"
+          className="size-7 desktop:size-9"
+        />
         <h1 className="text-textPrimary text-lg desktop:text-3xl font-inter font-bold">
           Instant Reports with PowerBytes!
         </h1>
       </header>
       <p className="text-textPrimary text-justify font-inter text-sm desktop:text-base">
         <strong>PowerBytes</strong> is an easy-to-use web and mobile app that
-        lets you upload CSV, generate interactive charts, and
-        visualize your data in minutes. With Bytes, our AI assistant, you can
-        ask questions about your data and get intelligent insights instantly.
-        Once you’re done, download your reports to share and present your
-        findings. PowerBytes is your go-to tool for quick, smart, and beautiful
-        data analysis—anytime, anywhere.
+        lets you upload CSV, generate interactive charts, and visualize your
+        data in minutes. With Bytes, our AI assistant, you can ask questions
+        about your data and get intelligent insights instantly. Once you’re
+        done, download your reports to share and present your findings.
+        PowerBytes is your go-to tool for quick, smart, and beautiful data
+        analysis—anytime, anywhere.
       </p>
 
       {!selectedFile ? (
@@ -125,26 +135,30 @@ function Home() {
               <div className="h-1 bg-colorSecondary"></div>
               <section className="flex-col space-y-7 w-full mt-16">
                 <header className="flex gap-3 text-textPrimary place-items-center">
-                  <img src="./images/history.svg" alt="History Icon" className="size-7 desktop:size-9" />
+                  <img
+                    src="./images/history.svg"
+                    alt="History Icon"
+                    className="size-7 desktop:size-9"
+                  />
                   <h1 className="text-textPrimary text-lg desktop:text-3xl font-inter font-bold">
                     History
                   </h1>
                 </header>
                 <div className="h-fit bg-colorSecondary rounded-xl py-6">
                   {(isLoading || isFetching) && <Spinner />}
-                  {!isLoading && !isFetching && 
-                      <DynamicTable
-                        columns={reportColumns}
-                        data={data.slice(-5).reverse()}
-                        isPaginationHidden={true}
-                      />
-                  }
+                  {!isLoading && !isFetching && (
+                    <DynamicTable
+                      columns={reportColumns}
+                      data={data.slice(-5).reverse()}
+                      isPaginationHidden={true}
+                    />
+                  )}
                 </div>
-              </section> 
-              </>) : (
-              <div></div>
-            )
-          }
+              </section>
+            </>
+          ) : (
+            <div></div>
+          )}
         </>
       ) : (
         <section className="flex-col space-y-9">
@@ -178,7 +192,9 @@ function Home() {
               >
                 {isCleaning && <Spinner />}
                 {!isCleaning && (
-                  <span className="font-inter text-white text-nowrap">Clean Data</span>
+                  <span className="font-inter text-white text-nowrap">
+                    Clean Data
+                  </span>
                 )}
               </Button>
             )}
@@ -189,7 +205,9 @@ function Home() {
               >
                 {isCreating && <Spinner />}
                 {!isCreating && (
-                  <span className="font-inter text-white text-nowrap">Create Report</span>
+                  <span className="font-inter text-white text-nowrap">
+                    Create Report
+                  </span>
                 )}
               </Button>
             )}
