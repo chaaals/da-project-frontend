@@ -138,9 +138,9 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
                 />
                 <span className="text-textPrimary">{button.label}</span>
               </button>
-              <details className="absolute left-1/2 transform -translate-x-1/2 -translate-y-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black text-white text-xs rounded-lg px-2 py-1 shadow-lg z-50 whitespace-normal w-max max-w-52">
+              <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black text-white text-xs rounded-lg px-2 py-1 shadow-lg z-50 whitespace-normal w-max max-w-52">
                 {button.tooltip}
-              </details>
+              </div>
             </div>
           ))}
         </section>
