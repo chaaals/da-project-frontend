@@ -120,7 +120,7 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
       <div className="relative p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto overflow-x-hidden bg-gray-800 rounded-lg shadow-lg dark:bg-gray-900">
         <ModalHeader toggleModal={toggleModal} />
 
-        <div className="grid grid-cols-1 gap-4 my-6 px-2 desktop:grid-cols-5">
+        <section className="grid grid-cols-1 gap-4 my-6 px-2 desktop:grid-cols-5">
           {buttons.map((button, index) => (
             <div key={index} className="relative group">
               <button
@@ -138,13 +138,12 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
                 />
                 <span className="text-textPrimary">{button.label}</span>
               </button>
-              <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black text-white text-xs rounded-lg px-2 py-1 shadow-lg z-50 whitespace-normal w-max max-w-52">
+              <details className="absolute left-1/2 transform -translate-x-1/2 -translate-y-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black text-white text-xs rounded-lg px-2 py-1 shadow-lg z-50 whitespace-normal w-max max-w-52">
                 {button.tooltip}
-              </div>
-
+              </details>
             </div>
           ))}
-        </div>
+        </section>
         <ModalForm
           columns={columns}
           selectedChart={selectedChart}
