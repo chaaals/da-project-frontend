@@ -21,11 +21,29 @@ const chartIcons = {
 };
 
 const buttons = [
-  { label: "Scatter Plot", type: "scatter" },
-  { label: "Pie Chart", type: "pie" },
-  { label: "Bubble Chart", type: "bubble" },
-  { label: "Funnel Chart", type: "funnel" },
-  { label: "Stacked Bar Chart", type: "stackedbar" },
+  { 
+    label: "Scatter Plot", 
+    type: "scatter", 
+    tooltip: "Used to visualize relationships or correlations between two continuous variables, identifying patterns or trends." 
+  },
+  { 
+    label: "Pie Chart", 
+    type: "pie", 
+    tooltip: "Illustrates proportions or percentages of a whole, dividing data into segments of a circle." 
+  },
+  { 
+    label: "Bubble Chart", 
+    type: "bubble", 
+    tooltip: "Displays relationships between three variables using position and bubble size to add a dimension of comparison." },
+  { 
+    label: "Funnel Chart", 
+    type: "funnel", 
+    tooltip: "Shows progressive stages in a process, highlighting drop-offs or conversions at each stage." },
+  { 
+    label: "Stacked Bar Chart", 
+    type: "stackedbar", 
+    tooltip: "Compares parts of a whole across categories with segments stacked within each bar." 
+  },
 ];
 
 const CHART_DATA_TEMPLATE = {
@@ -99,29 +117,33 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
       aria-hidden="true"
       className="fixed inset-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-50"
     >
-      <div className="relative p-6 w-full max-w-4xl max-h-[90vh] overflow-auto bg-gray-800 rounded-lg shadow-lg dark:bg-gray-900">
+      <div className="relative p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto overflow-x-hidden bg-gray-800 rounded-lg shadow-lg dark:bg-gray-900">
         <ModalHeader toggleModal={toggleModal} />
 
-        <div className="grid grid-cols-1 gap-4 my-6 px-2 desktop:grid-cols-5">
+        <section className="grid grid-cols-1 gap-4 my-6 px-2 desktop:grid-cols-5">
           {buttons.map((button, index) => (
-            <button
-              key={index}
-              onClick={() => onSelectChart(button.type)}
-              className={`flex flex-col items-center justify-center p-4 text-white rounded-lg shadow-md focus:ring-2 focus:ring-blue-500 ${
-                selectedChart === button.type
-                  ? "bg-gray-700 hover:bg-gray-600"
-                  : "bg-gray-600 hover:bg-gray-700"
-              }`}
-            >
-              <img
-                src={chartIcons[button.type]}
-                alt={`${button.label} Icon`}
-                className="size-6 mb-2"
-              />
-              <span className="text-textPrimary">{button.label}</span>
-            </button>
+            <div key={index} className="relative group">
+              <button
+                onClick={() => onSelectChart(button.type)}
+                className={`flex flex-col items-center justify-center p-4 text-white rounded-lg shadow-md w-full h-full ${
+                  selectedChart === button.type
+                    ? "bg-colorSecondary"
+                    : "bg-tableHeader hover:bg-colorSecondary"
+                }`}
+              >
+                <img
+                  src={chartIcons[button.type]}
+                  alt={`${button.label} Icon`}
+                  className="size-6 mb-2"
+                />
+                <span className="text-textPrimary">{button.label}</span>
+              </button>
+              <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black text-white text-xs rounded-lg px-2 py-1 shadow-lg z-50 whitespace-normal w-max max-w-52">
+                {button.tooltip}
+              </div>
+            </div>
           ))}
-        </div>
+        </section>
         <ModalForm
           columns={columns}
           selectedChart={selectedChart}
@@ -134,7 +156,7 @@ const Modal = ({ report, columns, toggleModal, refetch }) => {
         <div className="flex justify-end mt-4">
           <button
             onClick={onAddReportPage}
-            className="w-32 flex items-center justify-center text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="w-32 flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             {isAdding && <Spinner />}
             {!isAdding && <span>Add Report</span>}
