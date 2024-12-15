@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import { useQuery } from '@tanstack/react-query';
 
-import Modal from "../components/addReportComponents/Modal";
-import { getReport } from "../queries/report";
-import Spinner from "../components/Spinner";
-import Table from "../components/Table";
-import CommentSection from "../components/CommentSection";
-import ReportPDF from "../components/ReportPDF";
-import Button from "../components/Button";
+import Modal from '../components/addReportComponents/Modal';
+import { getReport } from '../queries/report';
+import Spinner from '../components/Spinner';
+import Table from '../components/Table';
+import CommentSection from '../components/CommentSection';
+import ReportPDF from '../components/ReportPDF';
+import Button from '../components/Button';
 
-import { getColumns } from "../queries/column";
-import { getPages } from "../queries/page";
+import { getColumns } from '../queries/column';
+import { getPages } from '../queries/page';
 
-import useChart from "../hooks/useChart";
-import useTable from "../hooks/useTable";
+import useChart from '../hooks/useChart';
+import useTable from '../hooks/useTable';
 
 const ReportPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -24,7 +24,7 @@ const ReportPage = () => {
 
   const { reportId } = useParams();
   const { isLoading: isReportLoading, data: report } = useQuery({
-    queryKey: ["report"],
+    queryKey: ['report'],
     queryFn: () => getReport(reportId),
   });
 
@@ -33,7 +33,7 @@ const ReportPage = () => {
     isFetching: isColumnsFetching,
     data: columns,
   } = useQuery({
-    queryKey: ["columns"],
+    queryKey: ['columns'],
     queryFn: () => getColumns(reportId),
   });
 
@@ -43,12 +43,12 @@ const ReportPage = () => {
     data: reportPages,
     refetch: refetchPages,
   } = useQuery({
-    queryKey: ["reportPages"],
+    queryKey: ['reportPages'],
     queryFn: () => getPages(reportId),
   });
 
   const { tableData } = useTable({ columns });
-  const { getCharts } = useChart({ selectedChart: "", chartData: {} });
+  const { getCharts } = useChart({ selectedChart: '', chartData: {} });
 
   const charts = getCharts(reportPages);
 
@@ -65,44 +65,53 @@ const ReportPage = () => {
     const [reportPdf, setReportPdf] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [fileName, setFileName] = useState(`${report.name} report`);
-    
+
     const toggleDropdown = () => {
       setIsOpen(!isOpen);
-    }
+    };
 
     const handleFileNameChange = (e) => {
       setFileName(e.target.value);
     };
-  
+
     useEffect(() => {
       if (report && charts) {
         setReportPdf(<ReportPDF report={report} data={charts} />);
       }
     }, [report, charts]);
-  
+
     return (
-      <section className="flex justify-between items-center p-2 bg-transparent">
-        <div className="text-white text-base tablet:text-xl desktop:text-4xl font-inter font-semibold">{name}</div>
+      <section className='flex justify-between items-center p-2 bg-transparent'>
+        <div className='text-white text-base tablet:text-xl desktop:text-4xl font-inter font-semibold'>
+          {name}
+        </div>
         {activeTab === 0 && reportPdf !== null && (
-          <div className="relative hidden desktop:inline-block text-left">
-            <Button onClick={toggleDropdown} style="font-inter flex gap-2 text-white bg-colorButton rounded-lg px-4 py-2 place-items-center text-nowrap text-sm">
+          <div className='relative hidden tablet:inline-block text-left'>
+            <Button
+              onClick={toggleDropdown}
+              style='font-inter flex gap-2 text-white bg-colorButton rounded-lg px-4 py-2 place-items-center text-nowrap text-sm'
+            >
               Download Report
-              <img src="/images/arrow-down.svg" alt="Options" className="min-w-4 min-h-4 size-4" />
+              <img
+                src='/images/arrow-down.svg'
+                alt='Options'
+                className='min-w-4 min-h-4 size-4'
+              />
             </Button>
             {isOpen && (
-              <section className="absolute right-0 mt-2 w-fit bg-colorSecondary rounded-md shadow-lg z-50 p-2 flex flex-col place-items-end gap-2">
-                <input 
-                  type="text" 
-                  className="w-40 rounded-lg bg-colorPrimary text-white text-sm font-inter" 
-                  placeholder="File Name" 
+              <section className='absolute right-0 mt-2 w-fit bg-colorSecondary rounded-md shadow-lg z-50 p-2 flex flex-col place-items-end gap-2'>
+                <input
+                  type='text'
+                  className='w-40 rounded-lg bg-colorPrimary text-white text-sm font-inter'
+                  placeholder='File Name'
                   value={fileName}
-                  onChange={handleFileNameChange}>
-                </input>
+                  onChange={handleFileNameChange}
+                ></input>
                 <PDFDownloadLink
                   document={reportPdf}
                   fileName={`${fileName}.pdf`}
                 >
-                  <button className="bg-colorButton text-white px-4 py-2 rounded-lg w-40 font-inter">
+                  <button className='bg-colorButton text-white px-4 py-2 rounded-lg w-40 font-inter'>
                     Download
                   </button>
                 </PDFDownloadLink>
@@ -113,22 +122,22 @@ const ReportPage = () => {
       </section>
     );
   };
-  
+
   const Tabs = ({ tabs, activeTab, setActiveTab, onAddTab }) => {
     const handleTabClick = (tabId) => {
       setActiveTab(tabId);
     };
-  
+
     return (
-      <div className="text-sm font-medium text-center text-gray-500 mt-3">
-        <ul className="flex -mb-px overflow-x-auto place-items-center">
+      <div className='text-sm font-medium text-center text-gray-500 mt-3'>
+        <ul className='flex -mb-px overflow-x-auto place-items-center'>
           {tabs.map((tab) => (
             <li key={tab.id}>
-              <button 
+              <button
                 className={`inline-block p-4 border-b-2 ${
                   activeTab === tab.id
-                    ? "border-activeTab text-activeTab bg-bgActiveTab"
-                    : "border-[#212836] text-gray-500 hover:text-gray-400 hover:border-gray-400"
+                    ? 'border-activeTab text-activeTab bg-bgActiveTab'
+                    : 'border-[#212836] text-gray-500 hover:text-gray-400 hover:border-gray-400'
                 } text-md font-inter`}
                 onClick={() => handleTabClick(tab.id)}
               >
@@ -137,14 +146,11 @@ const ReportPage = () => {
             </li>
           ))}
           <li>
-            <button
-              onClick={onAddTab}
-              className="border-transparent p-4"
-            >
+            <button onClick={onAddTab} className='border-transparent p-4'>
               <img
-                src="/images/circle-plus.svg"
-                alt="Add Tab"
-                className="min-w-6 min-h-6 size-6"
+                src='/images/circle-plus.svg'
+                alt='Add Tab'
+                className='min-w-6 min-h-6 size-6'
               />
             </button>
           </li>
@@ -156,7 +162,7 @@ const ReportPage = () => {
   useEffect(() => {
     if (!isPagesLoading && !isPagesFetching && report) {
       setTabs([
-        { id: 0, name: "Overview", content: report.overview },
+        { id: 0, name: 'Overview', content: report.overview },
         ...charts.map(({ id, name, overview, chart }) => ({
           id,
           overview,
@@ -168,9 +174,9 @@ const ReportPage = () => {
   }, [isPagesFetching, isPagesLoading, report]);
 
   return (
-    <section className="flex flex-col min-h-screen bg-transparent py-8 tablet:py-12 desktop:py-16 px-10 tablet:px-16 desktop:px-24">
+    <section className='flex flex-col min-h-screen bg-transparent py-8 tablet:py-12 desktop:py-16 px-10 tablet:px-16 desktop:px-24'>
       {isReportLoading ? (
-        <div className="flex items-center justify-center h-[75dvh]">
+        <div className='flex items-center justify-center h-[75dvh]'>
           <Spinner />
         </div>
       ) : (
@@ -184,30 +190,32 @@ const ReportPage = () => {
             onAddTab={handleAddTab}
           />
 
-          <div className="py-4 text-sm font-medium text-gray-500">
+          <div className='py-4 text-sm font-medium text-gray-500'>
             {tabs.map(
               (tab) =>
                 activeTab === tab.id && (
                   <div key={tab.id}>
                     {tab.id === 0 ? (
                       <>
-                        <div className="flex items-start bg-tableData rounded-lg shadow-md p-6 desktop:p-8 gap-4 text-wrap breawords">
+                        <div className='flex items-start bg-tableData rounded-lg shadow-md p-6 desktop:p-8 gap-4 text-wrap breawords'>
                           <img
-                            src="/images/logo.svg"
-                            alt="PowerBytes Logo"
-                            className="mt-1 size-5"
+                            src='/images/logo.svg'
+                            alt='PowerBytes Logo'
+                            className='mt-1 size-5'
                           />
-                          <p className="text-justify text-xs desktop:text-sm font-inter">{tab.content}</p>
+                          <p className='text-justify text-xs desktop:text-sm font-inter'>
+                            {tab.content}
+                          </p>
                         </div>
                         <>
                           {charts && charts?.length > 0 && (
-                            <div className="w-full flex items-center justify-center flex-wrap gap-4 mt-4">
+                            <div className='w-full flex items-center justify-center flex-wrap gap-4 mt-4'>
                               {charts.map(({ chart }, i) => (
                                 <div
                                   key={i}
-                                  className="bg-white rounded-xl max-w-lg"
+                                  className='bg-white rounded-xl max-w-lg'
                                 >
-                                  <div className="w-full">{chart}</div>
+                                  <div className='w-full'>{chart}</div>
                                 </div>
                               ))}
                             </div>
@@ -216,20 +224,20 @@ const ReportPage = () => {
                       </>
                     ) : (
                       <>
-                        <section className="flex items-start bg-tableData rounded-lg shadow-md p-8 gap-4 text-wrap break-words text-justify">
+                        <section className='flex items-start bg-tableData rounded-lg shadow-md p-8 gap-4 text-wrap break-words text-justify'>
                           <img
-                            src="/images/logo.svg"
-                            alt="PowerBytes Logo"
-                            className="mt-1 size-5"
+                            src='/images/logo.svg'
+                            alt='PowerBytes Logo'
+                            className='mt-1 size-5'
                           />
                           <p>{tab.overview}</p>
                         </section>
-                        <section className="flex items-center justify-center w-full">
-                          <section className="flex flex-col max-w-2xl items-center mt-8 gap-2">
-                            <div className="flex items-center justify-center w-full shadow bg-white p-2 rounded-lg">
+                        <section className='flex items-center justify-center w-full'>
+                          <section className='flex flex-col max-w-2xl items-center mt-8 gap-2'>
+                            <div className='flex items-center justify-center w-full shadow bg-white p-2 rounded-lg'>
                               {tab.content}
                             </div>
-                            <hr className="w-full mt-4 border-tableData desktop:w-[33.33%]" />
+                            <hr className='w-full mt-4 border-tableData desktop:w-[33.33%]' />
                           </section>
                         </section>
                       </>
@@ -240,7 +248,7 @@ const ReportPage = () => {
           </div>
 
           {activeTab > 0 && (
-            <section className="flex">
+            <section className='flex'>
               <CommentSection
                 charts={charts}
                 activeTab={activeTab}
@@ -252,7 +260,7 @@ const ReportPage = () => {
           )}
 
           {activeTab === 0 && (
-            <section className="flex items-center justify-center  ">
+            <section className='flex items-center justify-center  '>
               {(isColumnsLoading || isColumnsFetching) &&
                 tableData.length === 0 && <Spinner />}
               {(!isColumnsFetching || !isColumnsLoading) &&
